@@ -33,12 +33,6 @@
             <WrapPanel Name="WordsBlock" 
                    Orientation="Horizontal">
             </WrapPanel>
-            <Rectangle Name="Caret"
-                       Fill="#160bee"
-                       Width="5"
-                       Height="16">
-                
-            </Rectangle>
         </Grid>
         
         <StackPanel VerticalAlignment="Center" 
@@ -55,7 +49,8 @@
                      Height="71" 
                      HorizontalContentAlignment="Left"
                      VerticalAlignment="Bottom"
-                     PreviewKeyDown="KeyDownHandler">
+                     PreviewKeyDown="KeyDownHandler"
+                     BorderBrush="Transparent">
             </TextBox>
         </Border>
     </Grid>

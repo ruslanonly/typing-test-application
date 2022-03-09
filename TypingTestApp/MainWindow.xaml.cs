@@ -55,6 +55,13 @@ namespace TypingTestApp
         {
             RenderText();
             InputBlock.Focus();
+            TestTimer.Start();
+        }
+
+        public void StopTest()
+        {
+            TestTimer.Stop();
+            MessageBox.Show(TestTimer.Value.ToString());
         }
 
         public class Word : TextBlock
@@ -74,12 +81,14 @@ namespace TypingTestApp
                 Opacity = 0.5;
                 Background = new SolidColorBrush();
                 Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                
             }
 
             public void Incorrect()
             {
                 isCorrect = false;
                 Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                
             }
 
             public void Highlight()
@@ -87,11 +96,9 @@ namespace TypingTestApp
                 Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
             }
         }
-
-        public int wordIndex = 0;
         public void SpaceHandler()
         {
-            var word = WordsBlock.Children[wordIndex++] as Word;
+            var word = WordsBlock.Children[TestState.wordIndex++] as Word;
             if (word.Content == InputBlock.Text.Trim(' '))
             {
                 word.Correct();
@@ -100,8 +107,14 @@ namespace TypingTestApp
                 word.Incorrect();
             }
             InputBlock.Clear();
-            var nextWord = WordsBlock.Children[wordIndex] as Word;
-            nextWord.Highlight();
+            if (TestState.wordIndex < 25)
+            {
+                var nextWord = WordsBlock.Children[TestState.wordIndex] as Word;
+                nextWord.Highlight();
+            } else
+            {
+                StopTest();
+            }
         }
 
         private void KeyDownHandler(object sender, KeyEventArgs e)
