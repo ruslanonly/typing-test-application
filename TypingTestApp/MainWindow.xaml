@@ -1,0 +1,62 @@
+﻿<Window x:Class="TypingTestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TypingTestApp"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        Height="500" 
+        Width="800"
+        MinWidth="900"
+        MinHeight="500"
+        FontSize="16"
+        >
+    <Grid x:Name="TestWrapper" HorizontalAlignment="Center" Width="900" Height="500" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Name="TextWrapper"
+              Grid.Row="1" 
+              Grid.Column="1" 
+              Grid.ColumnSpan="3">
+            <WrapPanel Name="WordsBlock" 
+                   Orientation="Horizontal">
+            </WrapPanel>
+            <Rectangle Name="Caret"
+                       Fill="#160bee"
+                       Width="5"
+                       Height="16">
+                
+            </Rectangle>
+        </Grid>
+        
+        <StackPanel VerticalAlignment="Center" 
+                    Cursor="Hand"
+                    Background="Transparent"
+                    HorizontalAlignment="Left" 
+                    Grid.Row="2" Grid.Column="1">
+            <Button x:Name="resetButton" Content="restart" Padding="5, 5, 5, 5" VerticalAlignment="Bottom"/>
+        </StackPanel>
+        <Border Grid.Row="2" 
+                Grid.Column="2"
+                CornerRadius="500">
+            <TextBox x:Name="InputBlock" 
+                     Height="71" 
+                     HorizontalContentAlignment="Left"
+                     VerticalAlignment="Bottom"
+                     PreviewKeyDown="KeyDownHandler">
+            </TextBox>
+        </Border>
+    </Grid>
+</Window>
