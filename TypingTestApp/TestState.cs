@@ -6,13 +6,16 @@ namespace TypingTestApp
 {
     class TestState
     {
-        public static int wordIndex = 0;
-        public static int correctWords = 0;
+        public static int WordIndex = 0;
+        public static int LetterIndex = 0;
+        public static int CorrectWords = 0;
+        public static bool RepeatTest = false;
 
         public static void Reset()
         {
-            wordIndex = 0;
-            correctWords = 0;
+            WordIndex = 0;
+            CorrectWords = 0;
+            
         }
     }
 }

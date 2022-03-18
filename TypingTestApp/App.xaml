@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:TypingTestApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-
+        
     </Application.Resources>
 </Application>
 

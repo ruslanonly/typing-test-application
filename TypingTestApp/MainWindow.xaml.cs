@@ -24,7 +24,7 @@ namespace TypingTestApp
         {
             InitializeComponent();
             StartTest();
-        }
+        } 
 
         public string[] words = { 
             "add",
@@ -37,91 +37,191 @@ namespace TypingTestApp
             "check",
             "as",
             "rise",
-            "thought",
-
+            "thought"
         };
 
+        public UIElementCollection CurrentWordCollection;
         public void RenderText()
         {
+
             Random randomIndex = new Random();
-            for(int i = 0; i < 25; i++)
+            for (int i = 0; i < 25; i++)
             {
-                var word = new Word(words[randomIndex.Next(0, words.Length)]);
+                string wordContent = words[randomIndex.Next(0, words.Length)];
+                Word word = new Word();
+                for(int j = 0; j < wordContent.Length; j++)
+                {
+                    Letter letter = new Letter(Convert.ToString(wordContent[j]));
+                    word.Children.Add(letter);
+                }
                 WordsBlock.Children.Add(word);
             }
+            CurrentWordCollection = WordsBlock.Children;
+
         }
 
         public void StartTest()
         {
             RenderText();
-            InputBlock.Focus();
             TestTimer.Start();
         }
 
-        public void StopTest()
+        static public void StopTest()
         {
             TestTimer.Stop();
-            MessageBox.Show(TestTimer.Value.ToString());
         }
 
-        public class Word : TextBlock
+        public class TestTimer
+        {
+            public static double Value;
+            private static System.Timers.Timer timer;
+            private static void IntervalStepHandler(Object source, System.Timers.ElapsedEventArgs e)
+            {
+                Value += 0.1;
+            }
+
+            public static void Start()
+            {
+                timer = new System.Timers.Timer();
+                timer.Interval = 100;
+                timer.Elapsed += IntervalStepHandler;
+                timer.Start();
+            }
+
+            public static void Stop()
+            {
+                timer.Stop();
+            }
+
+            public static void Reset()
+            {
+                Value = 0;
+            }
+        }
+
+        public class Word : StackPanel
         {
             public string Content;
             public bool isCorrect;
-            public Word(string content)
+            public int Length
+            {
+                get
+                {
+                    return this.Children.Count;
+                }
+            }
+
+            public Word()
+            {
+                Margin = new Thickness(0, 0, 10, 0);
+                Orientation = Orientation.Horizontal;
+            }
+        }
+        public class Letter : TextBlock
+        {
+            public string Content;
+            public bool isCorrect;
+            public Letter(string content)
             {
                 Text = content;
                 Content = content;
-                Padding = new Thickness(5, 5, 5, 5);
+                FontSize = 20;
+                Foreground = new SolidColorBrush(Color.FromRgb(71, 83, 94));
+            }
+            public void Default()
+            {
+                Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
             }
 
             public void Correct()
             {
                 isCorrect = true;
                 Opacity = 0.5;
-                Background = new SolidColorBrush();
-                Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-                
+                Foreground = new SolidColorBrush(Color.FromRgb(235, 237, 245));
+                TestState.CorrectWords++;
             }
 
             public void Incorrect()
             {
                 isCorrect = false;
-                Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                
-            }
-
-            public void Highlight()
-            {
-                Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
+                Foreground = new SolidColorBrush(Color.FromRgb(248, 150, 30));
             }
         }
+
+        public Word getWord(int index = -1)
+        {
+            if (index == -1)
+            {
+                index = TestState.WordIndex;
+            }
+            return WordsBlock.Children[index] as Word;
+        }
+
+        public Letter getLetter(int index = -1)
+        {
+            if (index == -1)
+            {
+                index = TestState.LetterIndex;
+            }
+            return getWord().Children[index] as Letter;
+        }
+
+        public Point getLetterPoint()
+        {
+            Vector letterVector = VisualTreeHelper.GetOffset(getLetter(TestState.LetterIndex));
+            Vector wordVector = VisualTreeHelper.GetOffset(getWord(TestState.WordIndex));
+            return new Point(letterVector.X + wordVector.X, wordVector.Y);
+        }
+
         public void SpaceHandler()
         {
-            var word = WordsBlock.Children[TestState.wordIndex++] as Word;
-            if (word.Content == InputBlock.Text.Trim(' '))
+            bool isLastWord = TestState.WordIndex + 1 == Config.Words;
+            bool isWordBeginning = TestState.LetterIndex == 0;
+            if (!isLastWord)
             {
-                word.Correct();
-            } else
-            {
-                word.Incorrect();
-            }
-            InputBlock.Clear();
-            if (TestState.wordIndex < 25)
-            {
-                var nextWord = WordsBlock.Children[TestState.wordIndex] as Word;
-                nextWord.Highlight();
-            } else
-            {
-                StopTest();
+                if (TestState.LetterIndex == getWord().Length)
+                {
+                    TestState.WordIndex++;
+                    TestState.LetterIndex = 0;
+                } else if (TestState.LetterIndex < getWord().Length && !isWordBeginning)
+                {
+                    for (int i = TestState.LetterIndex; i < getWord().Length; i++)
+                    {
+                        Letter letter = getWord().Children[i] as Letter;
+                        letter.Incorrect();
+                    }
+                    TestState.WordIndex++;
+                    TestState.LetterIndex = 0;
+                }
             }
         }
 
+        public void RegularKeyHandler(string key)
+        {
+            if (TestState.LetterIndex < getWord().Length)
+            {
+                if (key == getLetter().Content)
+                {
+                    getLetter().Correct();
+
+                }
+                else
+                {
+                    getLetter().Incorrect();
+                }
+                Caret.MoveTo(getLetterPoint());
+                TestState.LetterIndex++;
+            }
+        }
         private void KeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space)
             {
                 SpaceHandler();
+                
+            } else
+            {
+                RegularKeyHandler(e.Key.ToString().ToLower());
             }
         }
     }
