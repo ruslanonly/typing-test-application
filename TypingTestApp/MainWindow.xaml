@@ -43,8 +43,8 @@
                     Fill="#3c60d6"
                     Width="3"
                     Height="25"
-                    Canvas.Left="{Binding Source={x:Static local:Caret._left}, Path=Source, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                    Canvas.Top="{Binding Source={x:Static local:Caret._top}, Path=Source,  UpdateSourceTrigger=PropertyChanged}">
+                    Canvas.Left="0"
+                    Canvas.Top="0">
                 </Rectangle>
             </Canvas>
             <WrapPanel Name="WordsBlock" 

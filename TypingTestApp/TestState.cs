@@ -9,13 +9,17 @@ namespace TypingTestApp
         public static int WordIndex = 0;
         public static int LetterIndex = 0;
         public static int CorrectWords = 0;
+        public static int CorrectLetters = 0;
+        public static int PressedKeys = 0;
         public static bool RepeatTest = false;
 
         public static void Reset()
         {
             WordIndex = 0;
+            LetterIndex = 0;
             CorrectWords = 0;
-            
+            CorrectLetters = 0;
+            PressedKeys = 0;
         }
     }
 }
