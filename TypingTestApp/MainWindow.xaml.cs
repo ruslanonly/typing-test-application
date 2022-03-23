@@ -24,6 +24,7 @@ namespace TypingTestApp
         public MainWindow()
         {
             InitializeComponent();
+            Config.InitConfig();
             StartTest();
         }
 
@@ -33,12 +34,10 @@ namespace TypingTestApp
             easingFunction.EasingMode = EasingMode.EaseOut;
             DoubleAnimation LeftAnimation = new DoubleAnimation();
             LeftAnimation.To = point.X;
-            LeftAnimation.Duration = TimeSpan.FromMilliseconds(150);
-            LeftAnimation.EasingFunction = easingFunction;
+            LeftAnimation.Duration = TimeSpan.FromMilliseconds(120);
             DoubleAnimation TopAnimation = new DoubleAnimation();
             TopAnimation.To = point.Y;
-            TopAnimation.Duration = TimeSpan.FromMilliseconds(150);
-            TopAnimation.EasingFunction = easingFunction;
+            TopAnimation.Duration = TimeSpan.FromMilliseconds(120);
             CaretBlock.BeginAnimation(Canvas.LeftProperty, LeftAnimation);
             CaretBlock.BeginAnimation(Canvas.TopProperty, TopAnimation);
         }
@@ -62,7 +61,7 @@ namespace TypingTestApp
         {
             WordsBlock.Children.Clear();
             Random randomIndex = new Random();
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 10; i++)
             {
                 string wordContent = words[randomIndex.Next(0, words.Length)];
                 Word word = new Word();
@@ -87,6 +86,7 @@ namespace TypingTestApp
         {
             TestState.Reset();
             StopTest();
+            moveCaretTo(getLetterPoint(0, 0));
             StartTest();
         }
 
@@ -141,6 +141,7 @@ namespace TypingTestApp
                 Orientation = Orientation.Horizontal;
             }
         }
+
         public class Letter : TextBlock
         {
             public string Content;
@@ -236,7 +237,6 @@ namespace TypingTestApp
         public void BackSpaceHandler()
         {
             bool isWordBeginning = TestState.LetterIndex == 0;
-            bool isFirstLetter = TestState.WordIndex == 0 && TestState.LetterIndex == 0;
             if (!isWordBeginning)
             {
                 TestState.LetterIndex--;
@@ -251,19 +251,13 @@ namespace TypingTestApp
                 {
                     getLetter(index).isCorrect = false;
                 }
-                if (!isFirstLetter)
-                {
-                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
-                }
+                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
 
-        } else
+            } else
             {
-                if (!isFirstLetter)
-                {
-                    TestState.WordIndex--;
-                    TestState.LetterIndex = getWord().Length;
-                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex, true));
-                }
+                TestState.WordIndex--;
+                TestState.LetterIndex = getWord().Length - 1;
+                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex, true));
             }
         }
 
@@ -304,11 +298,17 @@ namespace TypingTestApp
                 }
                 else if (e.Key == Key.Back)
                 {
-                    BackSpaceHandler();
+                    bool isFirstLetter = TestState.WordIndex == 0 && TestState.LetterIndex == 0;
+                    if (!isFirstLetter)
+                    {
+                        BackSpaceHandler();
+                    }
                 }
                 else if (e.Key >= Key.A && e.Key <= Key.Z)
                 {
                     RegularKeyHandler(e.Key.ToString().ToLower());
+                    bool isLastLetter = TestState.WordIndex == Config.Words - 1 && TestState.LetterIndex == getWord().Length;
+                    if (isLastLetter) RestartTest();
                 }
             }
         }

@@ -1,0 +1,29 @@
+[33mcommit 3ef496a814856eb7ed85fbe465d690018641afc7[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: ruslanonly <rzaevruslanonly@gmail.com>
+Date:   Sun Mar 20 00:20:03 2022 +0300
+
+    Add Caret Movements and Create Test's Statistics collecting.
+
+[33mcommit 34e53a85b4918b637912c26ce770ff029f27b4c3[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: ruslanonly <rzaevruslanonly@gmail.com>
+Date:   Sat Mar 19 00:57:40 2022 +0300
+
+    Create a test basis
+
+[33mcommit 7f1dc1e99a84e7934cf9bb6ca2e284799eb07fe4[m
+Author: ruslanonly <rzaevruslanonly@gmail.com>
+Date:   Wed Mar 9 23:53:51 2022 +0300
+
+    Add TestState and TestTimer.
+
+[33mcommit 5bbddbb468548fb60b87f5d94d6f3df6582c7d3a[m
+Author: ruslanonly <rzaevruslanonly@gmail.com>
+Date:   Wed Mar 9 18:10:39 2022 +0300
+
+    Добавьте файлы проекта.
+
+[33mcommit 50d415f9abd12f50fa3b168281bc5a31668a240c[m
+Author: ruslanonly <rzaevruslanonly@gmail.com>
+Date:   Wed Mar 9 18:10:37 2022 +0300
+
+    Добавьте GITIGNORE- и GITATTRIBUTES-файлы.

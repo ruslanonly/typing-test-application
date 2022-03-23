@@ -37,7 +37,7 @@ namespace TypingTestApp
         {
             TestMode = TestMode.Words;
             Time = 60;
-            Words = 30;
+            Words = 10;
         }
     }
 }
