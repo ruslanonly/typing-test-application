@@ -256,8 +256,8 @@ namespace TypingTestApp
             } else
             {
                 TestState.WordIndex--;
-                TestState.LetterIndex = getWord().Length - 1;
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex, true));
+                TestState.LetterIndex = getWord().Length;
+                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
             }
         }
 
