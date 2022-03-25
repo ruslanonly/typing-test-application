@@ -34,10 +34,10 @@ namespace TypingTestApp
             easingFunction.EasingMode = EasingMode.EaseOut;
             DoubleAnimation LeftAnimation = new DoubleAnimation();
             LeftAnimation.To = point.X;
-            LeftAnimation.Duration = TimeSpan.FromMilliseconds(120);
+            LeftAnimation.Duration = TimeSpan.FromMilliseconds(90);
             DoubleAnimation TopAnimation = new DoubleAnimation();
             TopAnimation.To = point.Y;
-            TopAnimation.Duration = TimeSpan.FromMilliseconds(120);
+            TopAnimation.Duration = TimeSpan.FromMilliseconds(90);
             CaretBlock.BeginAnimation(Canvas.LeftProperty, LeftAnimation);
             CaretBlock.BeginAnimation(Canvas.TopProperty, TopAnimation);
         }
@@ -95,93 +95,7 @@ namespace TypingTestApp
             TestTimer.Stop();
         }
 
-        public class TestTimer
-        {
-            public static double Value;
-            private static System.Timers.Timer timer;
-            private static void IntervalStepHandler(Object source, System.Timers.ElapsedEventArgs e)
-            {
-                Value += 0.1;
-            }
-
-            public static void Start()
-            {
-                timer = new System.Timers.Timer();
-                timer.Interval = 100;
-                timer.Elapsed += IntervalStepHandler;
-                timer.Start();
-            }
-
-            public static void Stop()
-            {
-                timer.Stop();
-            }
-
-            public static void Reset()
-            {
-                Value = 0;
-            }
-        }
-
-        public class Word : StackPanel
-        {
-            public string Content;
-            public bool isCorrect;
-            public int Length
-            {
-                get
-                {
-                    return this.Children.Count;
-                }
-            }
-
-            public Word()
-            {
-                Margin = new Thickness(0, 0, 10, 0);
-                Orientation = Orientation.Horizontal;
-            }
-        }
-
-        public class Letter : TextBlock
-        {
-            public string Content;
-            public bool isCorrect;
-
-            public void AnimateColor(SolidColorBrush color)
-            {
-                ColorAnimation animation;
-                animation = new ColorAnimation();
-                animation.To = color.Color;
-                animation.Duration = new Duration(TimeSpan.FromMilliseconds(10));
-                Foreground.BeginAnimation(SolidColorBrush.ColorProperty, animation);
-            }
-            public Letter(string content)
-            {
-                Text = content;
-                Content = content;
-                FontSize = 20;
-                Foreground = new SolidColorBrush(Color.FromRgb(71, 83, 94));
-            }
-            public void Default()
-            {
-                Opacity = 1;
-                AnimateColor(new SolidColorBrush(Color.FromRgb(71, 83, 94)));
-            }
-
-            public void Correct()
-            {
-                isCorrect = true;
-                Opacity = 0.5;
-                AnimateColor(new SolidColorBrush(Color.FromRgb(235, 237, 245)));
-            }
-
-            public void Incorrect()
-            {
-                isCorrect = false;
-                Opacity = 1;
-                AnimateColor(new SolidColorBrush(Color.FromRgb(248, 150, 30)));
-            }
-        }
+        
 
         public Word getWord(int index = -1)
         {
@@ -237,27 +151,56 @@ namespace TypingTestApp
         public void BackSpaceHandler()
         {
             bool isWordBeginning = TestState.LetterIndex == 0;
-            if (!isWordBeginning)
+            if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
-                TestState.LetterIndex--;
-                if (!getLetter().isCorrect)
+                if (!isWordBeginning)
                 {
-                    TestState.CorrectLetters--;
-                }
+                    TestState.LetterIndex--;
+                    if (!getLetter().isCorrect)
+                    {
+                        TestState.CorrectLetters--;
+                    }
 
-                int index = TestState.LetterIndex;
-                getLetter(index).Default();
-                if (getLetter(index).isCorrect)
+                    int index = TestState.LetterIndex;
+                    getLetter(index).Default();
+                    if (getLetter(index).isCorrect)
+                    {
+                        getLetter(index).isCorrect = false;
+                    }
+                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+
+                }
+                else
                 {
-                    getLetter(index).isCorrect = false;
+                    TestState.WordIndex--;
+                    TestState.LetterIndex = getWord().Length;
+                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
                 }
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
-
             } else
             {
-                TestState.WordIndex--;
-                TestState.LetterIndex = getWord().Length;
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
+                if (!isWordBeginning)
+                {
+                    TestState.LetterIndex--;
+                    if (!getLetter().isCorrect)
+                    {
+                        TestState.CorrectLetters--;
+                    }
+
+                    int index = TestState.LetterIndex;
+                    getLetter(index).Default();
+                    if (getLetter(index).isCorrect)
+                    {
+                        getLetter(index).isCorrect = false;
+                    }
+                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+
+                }
+                else
+                {
+                    TestState.WordIndex--;
+                    TestState.LetterIndex = getWord().Length;
+                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
+                }
             }
         }
 

@@ -15,11 +15,7 @@ namespace TypingTestApp
 
         public static void Reset()
         {
-            WordIndex = 0;
-            LetterIndex = 0;
-            CorrectWords = 0;
-            CorrectLetters = 0;
-            PressedKeys = 0;
+            WordIndex = LetterIndex = CorrectWords = CorrectLetters = PressedKeys = 0;
         }
     }
 }
