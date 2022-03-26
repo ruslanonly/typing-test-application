@@ -20,6 +20,21 @@ namespace TypingTestApp
             }
         }
 
+        public void Analyse()
+        {
+            bool res = true;
+            for (int i = 0; i < this.Length; i++)
+            {
+                Letter letter = this.Children[i] as Letter;
+                if (!letter.isCorrect)
+                {
+                    res = false;
+                }
+            }
+            if (res) this.isCorrect = true;
+            else this.isCorrect = false;
+        }
+
         public Word()
         {
             Margin = new Thickness(0, 0, 10, 0);
@@ -36,7 +51,7 @@ namespace TypingTestApp
         {
             Text = content;
             Content = content;
-            FontSize = 20;
+            FontSize = 23;
             Foreground = new SolidColorBrush(Color.FromRgb(71, 83, 94));
         }
         public void Default()

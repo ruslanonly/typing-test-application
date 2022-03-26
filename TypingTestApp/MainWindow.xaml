@@ -41,8 +41,8 @@
                 <Rectangle 
                     x:Name="CaretBlock"
                     Fill="#3c60d6"
-                    Width="3"
-                    Height="30"
+                    Width="12"
+                    Height="3"
                     Canvas.Left="0"
                     Canvas.Top="0">
                 </Rectangle>
@@ -60,13 +60,27 @@
                     Grid.Row="2" Grid.Column="1">
             <Button x:Name="resetButton"
                     Height="24" 
-                    Width="34" 
+                    Width="40" 
                     Padding="-1" 
                     BorderThickness="0" 
                     BorderBrush="Transparent"
-                    Background="#252c34">
+                    Background="#2a323b"
+                    Click="ResetButtonClickHandler">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border CornerRadius="3" Background="{TemplateBinding Background}" >
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
                 <Canvas Background="Transparent" Width="24" Height="24">
-                    <Path Fill="#829094" Data="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></Path>
+                    <Path Fill="#404f5c" Data="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></Path>
                 </Canvas>
             </Button>
         </StackPanel>

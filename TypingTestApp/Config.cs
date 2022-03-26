@@ -4,13 +4,6 @@ using System.Text;
 
 namespace TypingTestApp
 {
-    enum TestMode
-    {
-        Words,
-        Time,
-        Quote
-    }
-    
     public enum TimeOption
     {
         Fifteen,
@@ -29,15 +22,11 @@ namespace TypingTestApp
     }
     class Config
     {
-        static public TestMode TestMode { get; set; }
-        static public int Time;
         static public int Words;
         
         static public void InitConfig()
         {
-            TestMode = TestMode.Words;
-            Time = 60;
-            Words = 10;
+            Words = 15;
         }
     }
 }
