@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,26 +28,61 @@ namespace TypingTestApp
             InitializeComponent();
             Config.InitConfig();
             StartTest();
-            moveCaretTo(getLetterPoint(0, 0));
         }
 
-        public string[] words = { 
-            "add",
-            "move",
-            "it",
-            "buy",
-            "by",
-            "word",
-            "letter",
-            "check",
-            "as",
-            "rise",
-            "thought"
-        };
+        public class Caret
+        {
+            Rectangle _block;
+            public Caret(Rectangle block)
+            {
+                _block = block;
+            }
+            public void MoveTo(Point point)
+            {
+                SineEase easingFunction = new SineEase();
+                easingFunction.EasingMode = EasingMode.EaseOut;
+                DoubleAnimation LeftAnimation = new DoubleAnimation();
+                LeftAnimation.To = point.X;
+                LeftAnimation.Duration = TimeSpan.FromMilliseconds(90);
+                DoubleAnimation TopAnimation = new DoubleAnimation();
+                TopAnimation.To = point.Y;
+                TopAnimation.Duration = TimeSpan.FromMilliseconds(90);
+                _block.BeginAnimation(Canvas.LeftProperty, LeftAnimation);
+                _block.BeginAnimation(Canvas.TopProperty, TopAnimation); 
+            }
+        }
+
+        public enum WordGroup
+        {
+            Standart,
+            Medium,
+            Hard
+        }
 
         public UIElementCollection CurrentWordCollection;
-        public void RenderText()
+        public WordGroup currentWordGroup = WordGroup.Standart;
+
+        public async ValueTask<string[]> LoadWordsGroup(WordGroup wordGroup)
         {
+            try
+            {
+                using (StreamReader sr = new StreamReader("../../../Assets/" + wordGroup.ToString() + ".json"))
+                {
+                    return await JsonSerializer.DeserializeAsync<string[]>(sr.BaseStream);
+                }
+            } catch(Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+                using (StreamReader sr = new StreamReader("../../../Assets/Standart.json"))
+                {
+                    return await JsonSerializer.DeserializeAsync<string[]>(sr.BaseStream);
+                }
+            }
+        }
+        public async Task RenderText()
+        {
+            string[] words = await LoadWordsGroup(currentWordGroup);
+
             WordsBlock.Children.Clear();
             Random randomIndex = new Random();
             for (int i = 0; i < Config.Words; i++)
@@ -63,15 +100,18 @@ namespace TypingTestApp
 
         }
 
-        public void StartTest()
+        public bool isWaitingForTest = true;
+        public async void StartTest()
         {
-            RenderText();
-            TestTimer.Start();
+            await RenderText();
+            isWaitingForTest = true;
+            moveCaretTo(getLetterPoint(0, 0));
         }
 
         public void RestartTest()
         {
             TestState.Reset();
+            TestTimer.Reset();
             StopTest();
             StartTest();
             moveCaretTo(getLetterPoint(0, 0));
@@ -259,18 +299,29 @@ namespace TypingTestApp
             {
                 if (e.Key == Key.Space)
                 {
-                    SpaceHandler();
+                    if (TestState.WordIndex < Config.Words - 1)
+                    {
+                        SpaceHandler();
+                    }
                 }
                 else if (e.Key == Key.Back)
                 {
                     bool isFirstLetter = TestState.WordIndex == 0 && TestState.LetterIndex == 0;
                     if (!isFirstLetter)
                     {
-                        BackSpaceHandler();
+                        if (!e.IsRepeat)
+                        {
+                            BackSpaceHandler();
+                        }
                     }
                 }
                 else if (e.Key >= Key.A && e.Key <= Key.Z)
                 {
+                    if (isWaitingForTest)
+                    {
+                        TestTimer.Start();
+                        isWaitingForTest = false;
+                    }
                     RegularKeyHandler(e.Key.ToString().ToLower());
                     bool isLastLetter = TestState.WordIndex == Config.Words - 1 && TestState.LetterIndex == getWord().Length;
                     if (isLastLetter)

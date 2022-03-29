@@ -9,22 +9,22 @@
         PreviewKeyDown="KeyDownHandler"
         Height="500" 
         Width="800"
-        MinWidth="900"
-        MinHeight="500"
+        MinWidth="1000"
+        MinHeight="600"
         FontSize="16"
         Background="#262e36"
         >
     <Grid x:Name="TestWrapper" 
           HorizontalAlignment="Center" 
-          Width="900" 
-          Height="500" 
+          Width="1000" 
+          Height="600" 
           VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -59,9 +59,9 @@
                     HorizontalAlignment="Left" 
                     Grid.Row="2" Grid.Column="1">
             <Button x:Name="resetButton"
-                    Height="24" 
+                    Height="30" 
                     Width="40" 
-                    Padding="-1" 
+                    Focusable="False"
                     BorderThickness="0" 
                     BorderBrush="Transparent"
                     Background="#2a323b"

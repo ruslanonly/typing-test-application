@@ -23,7 +23,10 @@ namespace TypingTestApp
 
         public static void Stop()
         {
-            timer.Stop();
+            if (timer != null)
+            {
+                timer.Stop();
+            }
         }
 
         public static void Reset()
