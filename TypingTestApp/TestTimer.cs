@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace TypingTestApp
 {
     public class TestTimer
     {
-        public static double Value;
+        public static double Value = 0;
         private static System.Timers.Timer timer;
         private static void IntervalHandler(Object source, System.Timers.ElapsedEventArgs e)
         {

@@ -60,7 +60,7 @@ namespace TypingTestApp
         }
 
         public UIElementCollection CurrentWordCollection;
-        public WordGroup currentWordGroup = WordGroup.Standart;
+        public WordGroup currentWordGroup = WordGroup.Medium;
 
         public async ValueTask<string[]> LoadWordsGroup(WordGroup wordGroup)
         {
@@ -110,15 +110,16 @@ namespace TypingTestApp
 
         public void RestartTest()
         {
-            TestState.Reset();
-            TestTimer.Reset();
             StopTest();
             StartTest();
+            TestState.Reset();
+            TestTimer.Reset();
             moveCaretTo(getLetterPoint(0, 0));
         }
 
         static public void StopTest()
         {
+            MessageBox.Show(TestStats.Wpm.ToString());
             TestTimer.Stop();
         }
 
@@ -174,7 +175,7 @@ namespace TypingTestApp
             {
                 Word writtenWord = getWord();
                 writtenWord.Analyse();
-                if (writtenWord.isCorrect) TestState.CorrectWords++;
+                if (writtenWord.isCorrect) TestStats.CorrectWords++;
                 TestState.WordIndex++;
                 TestState.LetterIndex = 0;
                 moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
@@ -206,7 +207,7 @@ namespace TypingTestApp
                         if (letter.isCorrect)
                         {
                             letter.isCorrect = false;
-                            TestState.CorrectLetters--;
+                            TestStats.CorrectLetters--;
                         }
                         letter.Default();
                     }
@@ -221,7 +222,7 @@ namespace TypingTestApp
                     if (word.isCorrect)
                     {
                         word.isCorrect = false;
-                        TestState.CorrectWords--;
+                        TestStats.CorrectWords--;
                     }
                     for (int i = word.Length - 1; i >= 0; i--)
                     {
@@ -229,7 +230,7 @@ namespace TypingTestApp
                         if (letter.isCorrect)
                         {
                             letter.isCorrect = false;
-                            TestState.CorrectLetters--;
+                            TestStats.CorrectLetters--;
                         }
                         letter.Default();
                     }
@@ -245,7 +246,7 @@ namespace TypingTestApp
                     if (letter.isCorrect)
                     {
                         letter.isCorrect = false;
-                        TestState.CorrectLetters--;
+                        TestStats.CorrectLetters--;
                     }
                     letter.Default();
                     moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
@@ -258,7 +259,7 @@ namespace TypingTestApp
                     if (word.isCorrect)
                     {
                         word.isCorrect = false;
-                        TestState.CorrectWords--;
+                        TestStats.CorrectWords--;
                     }
                     TestState.LetterIndex = word.Length;
                     moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
@@ -273,7 +274,7 @@ namespace TypingTestApp
                 if (key == getLetter().Content)
                 {
                     getLetter().Correct();
-                    TestState.CorrectLetters++;
+                    TestStats.CorrectLetters++;
                 }
                 else
                 {
@@ -288,7 +289,7 @@ namespace TypingTestApp
             {
                 moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
             }
-            TestState.PressedKeys++;
+            TestStats.PressedKeys++;
         }
         private void KeyDownHandler(object sender, KeyEventArgs e)
         {
