@@ -5,26 +5,49 @@ using System.Text;
 
 namespace TypingTestApp
 {
-    class TestStats
+    public class TestStats
     {
+        public static List<double> WpmHistory = new List<double>();
         public static int CorrectWords = 0;
         public static int CorrectLetters = 0;
         public static int PressedKeys = 0;
-        public static double Wpm
+        public static int Wpm
         {
             get
             {
-                double wps = CorrectWords / TestTimer.Value;
-                return Math.Floor(wps * 60);
+                double wps = CorrectWords / TestTimer.Value; 
+                int wpm = (int)Math.Floor(wps * 60);
+                WpmHistory.Add(wpm);
+                return wpm;
             }
         }
 
-        public static double Cpm
+        public static int Cpm
         {
             get
             {
                 double cps = CorrectLetters / TestTimer.Value;
-                return Math.Floor(cps * 60);
+                int cpm = (int)Math.Floor(cps * 60);
+                WpmHistory.Add(cpm);
+                return cpm;
+            }
+        }
+
+        public static double Accuracy
+        {
+            get
+            {
+                double accFloating = (double)CorrectLetters / (double)PressedKeys;
+                double acc = Math.Floor(accFloating * 100);
+                return acc;
+            }
+        }
+
+        public static double Time
+        {
+            get
+            {
+                return Math.Round(TestTimer.Value, 1);
             }
         }
 

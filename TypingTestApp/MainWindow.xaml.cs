@@ -87,7 +87,8 @@ namespace TypingTestApp
             Random randomIndex = new Random();
             for (int i = 0; i < Config.Words; i++)
             {
-                string wordContent = words[randomIndex.Next(0, words.Length)];
+                int indexInArray = randomIndex.Next(0, words.Length);
+                string wordContent = words[indexInArray];
                 Word word = new Word();
                 for(int j = 0; j < wordContent.Length; j++)
                 {
@@ -112,14 +113,15 @@ namespace TypingTestApp
         {
             StopTest();
             StartTest();
+            MessageBox.Show(TestStats.Accuracy.ToString());
             TestState.Reset();
+            TestStats.Reset();
             TestTimer.Reset();
             moveCaretTo(getLetterPoint(0, 0));
         }
 
         static public void StopTest()
         {
-            MessageBox.Show(TestStats.Wpm.ToString());
             TestTimer.Stop();
         }
 
