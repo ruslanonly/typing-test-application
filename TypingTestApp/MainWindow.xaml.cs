@@ -23,33 +23,17 @@ namespace TypingTestApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public async void InitApp()
         {
             InitializeComponent();
             Config.InitConfig();
-            StartTest();
+            await StartTest();
+            caret = new Caret(CaretBlock);
+            WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
         }
-
-        public class Caret
+        public MainWindow()
         {
-            Rectangle _block;
-            public Caret(Rectangle block)
-            {
-                _block = block;
-            }
-            public void MoveTo(Point point)
-            {
-                SineEase easingFunction = new SineEase();
-                easingFunction.EasingMode = EasingMode.EaseOut;
-                DoubleAnimation LeftAnimation = new DoubleAnimation();
-                LeftAnimation.To = point.X;
-                LeftAnimation.Duration = TimeSpan.FromMilliseconds(90);
-                DoubleAnimation TopAnimation = new DoubleAnimation();
-                TopAnimation.To = point.Y;
-                TopAnimation.Duration = TimeSpan.FromMilliseconds(90);
-                _block.BeginAnimation(Canvas.LeftProperty, LeftAnimation);
-                _block.BeginAnimation(Canvas.TopProperty, TopAnimation); 
-            }
+            InitApp();
         }
 
         public enum WordGroup
@@ -82,42 +66,53 @@ namespace TypingTestApp
         public async Task RenderText()
         {
             string[] words = await LoadWordsGroup(currentWordGroup);
-
             WordsBlock.Children.Clear();
-            Random randomIndex = new Random();
-            for (int i = 0; i < Config.Words; i++)
+            if (repeatTest)
             {
-                int indexInArray = randomIndex.Next(0, words.Length);
-                string wordContent = words[indexInArray];
-                Word word = new Word();
-                for(int j = 0; j < wordContent.Length; j++)
+                for(int i = 0; i < CurrentWordCollection.Count; i++)
                 {
-                    Letter letter = new Letter(Convert.ToString(wordContent[j]));
-                    word.Children.Add(letter);
+                    WordsBlock.Children.Add(CurrentWordCollection[i]);
                 }
-                WordsBlock.Children.Add(word);
+            } else
+            {
+                Random randomIndex = new Random();
+                for (int i = 0; i < Config.Words; i++)
+                {
+                    int indexInArray = randomIndex.Next(0, words.Length);
+                    string wordContent = words[indexInArray];
+                    Word word = new Word();
+                    for (int j = 0; j < wordContent.Length; j++)
+                    {
+                        Letter letter = new Letter(Convert.ToString(wordContent[j]));
+                        word.Children.Add(letter);
+                    }
+                    WordsBlock.Children.Add(word);
+                }
+                CurrentWordCollection = WordsBlock.Children;
             }
-            CurrentWordCollection = WordsBlock.Children;
-
         }
 
         public bool isWaitingForTest = true;
-        public async void StartTest()
+        public bool repeatTest = false;
+        public Caret caret;
+        public async Task StartTest()
         {
             await RenderText();
             isWaitingForTest = true;
-            moveCaretTo(getLetterPoint(0, 0));
+            caret = new Caret(CaretBlock);
+            caret.MoveTo(getLetterPoint(0, 0));
         }
 
         public void RestartTest()
         {
             StopTest();
             StartTest();
-            MessageBox.Show(TestStats.Accuracy.ToString());
             TestState.Reset();
             TestStats.Reset();
             TestTimer.Reset();
-            moveCaretTo(getLetterPoint(0, 0));
+            caret.MoveTo(getLetterPoint(0, 0));
+            WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
+
         }
 
         static public void StopTest()
@@ -180,7 +175,7 @@ namespace TypingTestApp
                 if (writtenWord.isCorrect) TestStats.CorrectWords++;
                 TestState.WordIndex++;
                 TestState.LetterIndex = 0;
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+                caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
             } else if (TestState.LetterIndex < getWord().Length && !isWordBeginning)
             {
                 Word skippedWord = getWord();
@@ -192,7 +187,7 @@ namespace TypingTestApp
                 skippedWord.isCorrect = false;
                 TestState.WordIndex++;
                 TestState.LetterIndex = 0;
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+                caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
             }
         }
 
@@ -214,7 +209,7 @@ namespace TypingTestApp
                         letter.Default();
                     }
                     TestState.LetterIndex = 0;
-                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+                    caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
 
                 }
                 else
@@ -237,7 +232,7 @@ namespace TypingTestApp
                         letter.Default();
                     }
                     TestState.LetterIndex = 0;
-                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+                    caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
                 }
             } else
             {
@@ -251,7 +246,7 @@ namespace TypingTestApp
                         TestStats.CorrectLetters--;
                     }
                     letter.Default();
-                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+                    caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
 
                 }
                 else
@@ -264,7 +259,7 @@ namespace TypingTestApp
                         TestStats.CorrectWords--;
                     }
                     TestState.LetterIndex = word.Length;
-                    moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
+                    caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
                 }
             }
         }
@@ -286,10 +281,10 @@ namespace TypingTestApp
             }
             if (TestState.LetterIndex < getWord().Length)
             {
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+                caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
             } else
             {
-                moveCaretTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
+                caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
             }
             TestStats.PressedKeys++;
         }
