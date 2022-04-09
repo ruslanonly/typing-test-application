@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Runtime;
 using System.Collections.Generic;
+using System.Windows;
 using System.Text;
 
 namespace TypingTestApp
 {
     public class TestStats
     {
-        public static List<double> WpmHistory = new List<double>();
+        public static List<int> WpmHistory = new List<int>();
         public static int CorrectWords = 0;
         public static int CorrectLetters = 0;
         public static int PressedKeys = 0;
@@ -17,7 +18,6 @@ namespace TypingTestApp
             {
                 double wps = CorrectWords / TestTimer.Value; 
                 int wpm = (int)Math.Floor(wps * 60);
-                WpmHistory.Add(wpm);
                 return wpm;
             }
         }
@@ -31,13 +31,7 @@ namespace TypingTestApp
                 {
                     summaryWps += WpmHistory[i];
                 }
-                if (WpmHistory.Count == 0)
-                {
-                    return Wpm;
-                } else
-                {
-                    return Math.Floor(summaryWps / WpmHistory.Count);
-                }
+                return Math.Floor(summaryWps / WpmHistory.Count);
             }
         }
 

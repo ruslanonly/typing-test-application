@@ -26,9 +26,12 @@
             </Setter>
         </Style>
         <Style x:Key="StatStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="Opacity" Value="0.5"></Setter>
+            <Setter Property="FontSize" Value="16"></Setter>
             <Setter Property="Foreground" Value="#829094"></Setter>
             <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="Margin" Value="0 0 5 0"></Setter>
+            <Setter Property="Padding" Value="5"></Setter>
         </Style>                       
     </Window.Resources>
     <Grid x:Name="TestWrapper" HorizontalAlignment="Center" Width="1000" Height="600" VerticalAlignment="Center">
@@ -41,6 +44,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions >
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -72,36 +76,31 @@
             </Button>
             
         </Grid>
-        <Grid x:Name="StatsBlock" Opacity="1" Grid.Row="0" Grid.Column="1" Margin="0,10,0,20" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" >
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
+        <StackPanel x:Name="StatsBlock" Margin="0 10 0 10" Opacity="0" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <Grid Grid.Column="0" Margin="0 0 10 0" HorizontalAlignment="Left" Background="#2a323b">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource StatStyle}">wpm</TextBlock>
-                <TextBlock x:Name="WPMValue" Grid.Row="1" Style="{StaticResource StatStyle}"></TextBlock>
+                <TextBlock x:Name="WPMValue" Grid.Column="1" Style="{StaticResource StatStyle}"></TextBlock>
             </Grid>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
+            <Grid Grid.Column="1" Margin="0 0 10 0" HorizontalAlignment="Left" Background="#2a323b">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource StatStyle}">cpm</TextBlock>
-                <TextBlock x:Name="CPMValue" Grid.Row="1" Style="{StaticResource StatStyle}"></TextBlock>
+                <TextBlock x:Name="CPMValue" Grid.Column="1" Style="{StaticResource StatStyle}"></TextBlock>
             </Grid>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <TextBlock Style="{StaticResource StatStyle}">accuracy</TextBlock>
-                <TextBlock x:Name="AccuracyValue" Grid.Row="1" Style="{StaticResource StatStyle}"></TextBlock>
+            <Grid Grid.Column="2" Margin="0 0 10 0" HorizontalAlignment="Left" Background="#2a323b">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource StatStyle}">acc</TextBlock>
+                <TextBlock x:Name="AccuracyValue" Grid.Column="1" Style="{StaticResource StatStyle}"></TextBlock>
             </Grid>
-        </Grid>
+        </StackPanel>
     </Grid>
 </Window>

@@ -18,7 +18,7 @@ namespace TypingTestApp
         
         static public void InitConfig()
         {
-            Words = 10;
+            Words = 40;
         }
     }
 }

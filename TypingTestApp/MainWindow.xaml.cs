@@ -36,11 +36,21 @@ namespace TypingTestApp
             InitApp();
         }
 
+        public void AnimateFadeIn(UIElement block) 
+        {
+
+            DoubleAnimation animation = new DoubleAnimation();
+            animation.Duration = TimeSpan.FromMilliseconds(250);
+            animation.To = 1;
+            block.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
         public void DisplayTestStats()
         {
-            WPMValue.Text = Convert.ToString(TestStats.AverageWpm);
+            WPMValue.Text = Convert.ToString(TestStats.Wpm);
             CPMValue.Text = Convert.ToString(TestStats.Cpm);
             AccuracyValue.Text = Convert.ToString(TestStats.Accuracy) + "%";
+            AnimateFadeIn(StatsBlock);
         }
 
         public enum WordGroup
