@@ -36,6 +36,13 @@ namespace TypingTestApp
             InitApp();
         }
 
+        public void DisplayTestStats()
+        {
+            WPMValue.Text = Convert.ToString(TestStats.AverageWpm);
+            CPMValue.Text = Convert.ToString(TestStats.Cpm);
+            AccuracyValue.Text = Convert.ToString(TestStats.Accuracy) + "%";
+        }
+
         public enum WordGroup
         {
             Standart,
@@ -103,21 +110,20 @@ namespace TypingTestApp
             caret.MoveTo(getLetterPoint(0, 0));
         }
 
-        public void RestartTest()
+        public async void RestartTest()
         {
-            StopTest();
-            StartTest();
+            await StartTest();
             TestState.Reset();
             TestStats.Reset();
+            TestTimer.Stop();
             TestTimer.Reset();
             caret.MoveTo(getLetterPoint(0, 0));
             WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
-
         }
 
-        static public void StopTest()
+        public void StopTest()
         {
-            TestTimer.Stop();
+            DisplayTestStats();
         }
 
         public void ResetButtonClickHandler(object sender, RoutedEventArgs e)
@@ -198,6 +204,7 @@ namespace TypingTestApp
             {
                 if (!isWordBeginning)
                 {
+                    if (TestState.LetterIndex == getWord().Length) --TestState.LetterIndex;
                     for (int i = TestState.LetterIndex; i >= 0; i--)
                     {
                         Letter letter = getLetter(i);
@@ -324,6 +331,7 @@ namespace TypingTestApp
                     bool isLastLetter = TestState.WordIndex == Config.Words - 1 && TestState.LetterIndex == getWord().Length;
                     if (isLastLetter)
                     {
+                        StopTest();
                         RestartTest();
                     }
                 }

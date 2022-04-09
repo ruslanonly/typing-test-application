@@ -22,6 +22,25 @@ namespace TypingTestApp
             }
         }
 
+        public static double AverageWpm
+        {
+            get
+            {
+                double summaryWps = 0;
+                for (int i = 0; i < WpmHistory.Count; i++)
+                {
+                    summaryWps += WpmHistory[i];
+                }
+                if (WpmHistory.Count == 0)
+                {
+                    return Wpm;
+                } else
+                {
+                    return Math.Floor(summaryWps / WpmHistory.Count);
+                }
+            }
+        }
+
         public static int Cpm
         {
             get

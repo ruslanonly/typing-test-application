@@ -12,7 +12,8 @@ namespace TypingTestApp
 
         public static void Reset()
         {
-            WordIndex = LetterIndex = 0;
+            WordIndex = 0;
+            LetterIndex = 0;
         }
     }
 }

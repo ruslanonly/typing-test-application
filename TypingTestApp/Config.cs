@@ -4,14 +4,6 @@ using System.Text;
 
 namespace TypingTestApp
 {
-    public enum TimeOption
-    {
-        Fifteen,
-        Thirty,
-        Minute,
-        TwoMinutes
-    }
-
     public enum Words
     {
         Ten,
