@@ -102,7 +102,7 @@ namespace TypingTestApp
         }
         public void onClick(object obj, RoutedEventArgs e)
         {
-            if (ActiveWordGroupButton != null) ActiveWordGroupButton.Inactive();
+            ActiveWordGroupButton.Inactive();
             ActiveWordGroupButton = this;
             Active();
             Config.wordGroup = wordGroup;
@@ -120,7 +120,7 @@ namespace TypingTestApp
         }
         public void onClick(object obj, RoutedEventArgs e)
         {
-            if (ActiveWordAmountButton != null) ActiveWordAmountButton.Inactive();
+            ActiveWordAmountButton.Inactive();
             ActiveWordAmountButton = this;
             Active();
             Config.wordAmount = wordAmount;

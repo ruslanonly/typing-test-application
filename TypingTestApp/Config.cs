@@ -16,7 +16,7 @@ namespace TypingTestApp
     {
         Simple,
         Medium,
-        Hard
+        Hard,
     }
 
     class Config
