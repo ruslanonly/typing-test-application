@@ -4,21 +4,32 @@ using System.Text;
 
 namespace TypingTestApp
 {
-    public enum Words
+    public enum WordAmount
     {
-        Ten,
-        Thirty,
-        Fifty,
-        SeventyFive,
-        Hundred
+        Ten = 10,
+        Twenty = 20,
+        Thirty = 30,
+        Fifty = 50,
+        SeventyFive = 75
     }
+    public enum WordGroup
+    {
+        Simple,
+        Medium,
+        Hard
+    }
+
     class Config
     {
         static public int Words;
+        static public WordGroup wordGroup;
+        static public WordAmount wordAmount;
         
         static public void InitConfig()
         {
-            Words = 40;
+            Words = 10;
+            wordGroup = WordGroup.Simple;
+            wordAmount = WordAmount.Ten;
         }
     }
 }

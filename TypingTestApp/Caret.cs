@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -11,6 +12,28 @@ namespace TypingTestApp
     public class Caret
     {
         Rectangle _block;
+        private static Timer BlinkTimer;
+        private void BlinkAction(object obj, ElapsedEventArgs e)
+        {
+            if (_block.Opacity == 1)
+            {
+                _block.Opacity = 0;
+            } else
+            {
+                _block.Opacity = 1;
+            }
+        }
+        public void StartBlinking()
+        {
+            BlinkTimer = new Timer(1000);
+            BlinkTimer.Elapsed += BlinkAction;
+            BlinkTimer.Start();
+        }
+
+        public void StopBlinking()
+        {
+            BlinkTimer.Stop();
+        }
         public Caret(Rectangle block)
         {
             _block = block;

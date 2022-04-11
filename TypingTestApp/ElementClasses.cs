@@ -75,4 +75,55 @@ namespace TypingTestApp
             Foreground = new SolidColorBrush(Color.FromRgb(248, 150, 30));
         }
     }
+    public class TestOptionButton : Button
+    {
+        public bool isActive;
+        public TestOptionButton() { }
+        public void Active()
+        {
+            isActive = true;
+            Style = (Style)FindResource("ActiveTestOptionButton");
+        }
+        public void Inactive()
+        {
+            isActive = false;
+            Style = (Style)FindResource("TestOptionButton");
+        }
+    }
+    public class WordGroupButton : TestOptionButton
+    {
+        public WordGroup wordGroup;
+        public static WordGroupButton ActiveWordGroupButton;
+        public WordGroupButton(WordGroup wordGroup) : base()
+        {
+            this.wordGroup = wordGroup;
+            Content = wordGroup.ToString().ToLower();
+            Click += onClick;
+        }
+        public void onClick(object obj, RoutedEventArgs e)
+        {
+            if (ActiveWordGroupButton != null) ActiveWordGroupButton.Inactive();
+            ActiveWordGroupButton = this;
+            Active();
+            Config.wordGroup = wordGroup;
+        }
+    }
+    public class WordAmountButton : TestOptionButton
+    {
+        public WordAmount wordAmount;
+        public static WordAmountButton ActiveWordAmountButton;
+        public WordAmountButton(WordAmount wordAmount) : base()
+        {
+            this.wordAmount = wordAmount;
+            Content = (int)wordAmount;
+            Click += onClick;
+        }
+        public void onClick(object obj, RoutedEventArgs e)
+        {
+            if (ActiveWordAmountButton != null) ActiveWordAmountButton.Inactive();
+            ActiveWordAmountButton = this;
+            Active();
+            Config.wordAmount = wordAmount;
+        }
+    }
 }

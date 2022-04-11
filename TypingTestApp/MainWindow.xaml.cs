@@ -8,13 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Threading;
 
 namespace TypingTestApp
 {
@@ -27,6 +23,7 @@ namespace TypingTestApp
         {
             InitializeComponent();
             Config.InitConfig();
+            LoadTestOptions();
             await StartTest();
             caret = new Caret(CaretBlock);
             WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
@@ -36,33 +33,51 @@ namespace TypingTestApp
             InitApp();
         }
 
-        public void AnimateFadeIn(UIElement block) 
-        {
-
-            DoubleAnimation animation = new DoubleAnimation();
-            animation.Duration = TimeSpan.FromMilliseconds(250);
-            animation.To = 1;
-            block.BeginAnimation(UIElement.OpacityProperty, animation);
-        }
-
         public void DisplayTestStats()
         {
             WPMValue.Text = Convert.ToString(TestStats.Wpm);
             CPMValue.Text = Convert.ToString(TestStats.Cpm);
             AccuracyValue.Text = Convert.ToString(TestStats.Accuracy) + "%";
-            AnimateFadeIn(StatsBlock);
+            if (StatsBlock.Opacity != 1)
+            {
+                Animate.FadeIn(StatsBlock);
+            }
         }
 
-        public enum WordGroup
+        public void LoadTestOptions()
         {
-            Standart,
-            Medium,
-            Hard
+            Array WordGroupValues = Enum.GetValues(typeof(WordGroup));
+            foreach (WordGroup wg in WordGroupValues)
+            {
+                WordGroupButton button = new WordGroupButton(wg);
+                WordGroupOptions.Children.Add(button);
+                if (Config.wordGroup == wg)
+                {
+                    button.Active();
+                    WordGroupButton.ActiveWordGroupButton = button;
+                } else
+                {
+                    button.Inactive();
+                }
+            }
+
+            Array WordAmountValues = Enum.GetValues(typeof(WordAmount));
+            foreach (WordAmount wa in WordAmountValues)
+            {
+                WordAmountButton button = new WordAmountButton(wa);
+                WordAmountOptions.Children.Add(button);
+                if (Config.wordAmount == wa)
+                {
+                    button.Active();
+                    WordAmountButton.ActiveWordAmountButton = button;
+                } else
+                {
+                    button.Inactive();
+                }
+            }
         }
 
         public UIElementCollection CurrentWordCollection;
-        public WordGroup currentWordGroup = WordGroup.Medium;
-
         public async ValueTask<string[]> LoadWordsGroup(WordGroup wordGroup)
         {
             try
@@ -82,7 +97,7 @@ namespace TypingTestApp
         }
         public async Task RenderText()
         {
-            string[] words = await LoadWordsGroup(currentWordGroup);
+            string[] words = await LoadWordsGroup(Config.wordGroup);
             WordsBlock.Children.Clear();
             if (repeatTest)
             {
@@ -93,7 +108,7 @@ namespace TypingTestApp
             } else
             {
                 Random randomIndex = new Random();
-                for (int i = 0; i < Config.Words; i++)
+                for (int i = 0; i < (int)Config.wordAmount; i++)
                 {
                     int indexInArray = randomIndex.Next(0, words.Length);
                     string wordContent = words[indexInArray];
@@ -118,6 +133,7 @@ namespace TypingTestApp
             isWaitingForTest = true;
             caret = new Caret(CaretBlock);
             caret.MoveTo(getLetterPoint(0, 0));
+            //caret.StartBlinking();
         }
 
         public async void RestartTest()
@@ -314,7 +330,7 @@ namespace TypingTestApp
             {
                 if (e.Key == Key.Space)
                 {
-                    if (TestState.WordIndex < Config.Words - 1)
+                    if (TestState.WordIndex < (int)Config.wordAmount - 1)
                     {
                         SpaceHandler();
                     }
@@ -335,10 +351,11 @@ namespace TypingTestApp
                     if (isWaitingForTest)
                     {
                         TestTimer.Start();
+                        //caret.StopBlinking();
                         isWaitingForTest = false;
                     }
                     RegularKeyHandler(e.Key.ToString().ToLower());
-                    bool isLastLetter = TestState.WordIndex == Config.Words - 1 && TestState.LetterIndex == getWord().Length;
+                    bool isLastLetter = TestState.WordIndex == (int)Config.wordAmount - 1 && TestState.LetterIndex == getWord().Length;
                     if (isLastLetter)
                     {
                         StopTest();
