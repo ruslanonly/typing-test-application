@@ -29,7 +29,7 @@ namespace TypingTestApp
         {
             Words = 10;
             wordGroup = WordGroup.Simple;
-            wordAmount = WordAmount.Ten;
+            wordAmount = WordAmount.Thirty;
         }
     }
 }

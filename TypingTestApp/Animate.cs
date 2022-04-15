@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Threading;
+using System.Windows.Media;
 
 namespace TypingTestApp
 {

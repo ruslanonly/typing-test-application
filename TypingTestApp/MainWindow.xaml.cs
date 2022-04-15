@@ -24,6 +24,7 @@ namespace TypingTestApp
             InitializeComponent();
             Config.InitConfig();
             LoadTestOptions();
+            LoadKeyMap();
             await StartTest();
             caret = new Caret(CaretBlock);
             WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
@@ -38,9 +39,40 @@ namespace TypingTestApp
             WPMValue.Text = Convert.ToString(TestStats.Wpm);
             CPMValue.Text = Convert.ToString(TestStats.Cpm);
             AccuracyValue.Text = Convert.ToString(TestStats.Accuracy) + "%";
+            TestStats.WpmHistory.Add(TestStats.Wpm);
+            AverageWPMValue.Text = Convert.ToString(TestStats.AverageWpm);
+
             if (StatsBlock.Opacity != 1)
             {
                 Animate.FadeIn(StatsBlock);
+            }
+        }
+
+        public string[][] keyMap = { 
+            new string[] { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
+            new string[] { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
+            new string[] { "Z", "X", "C", "V", "B", "N", "M" },
+        };
+        Dictionary<string, KeyBlock> keysDictionary = new Dictionary<string, KeyBlock>();
+        public void LoadKeyMap()
+        {
+            for(int i = 0; i < keyMap.Length; i++)
+            {
+                string[] keyChars = keyMap[i];
+                int column = 0;
+                foreach (string ch in keyChars)
+                {
+                    KeyBlock key = new KeyBlock(ch);
+                    key.Style = (Style)FindResource("KeyMapItem");
+                    keysDictionary.Add(ch, key);
+                    Border border = new Border();
+                    border.Style = (Style)FindResource("KeyMapItemBorder");
+                    border.Child = key;
+                    border.SetValue(Grid.RowProperty, i);
+                    border.SetValue(Grid.ColumnProperty, column);
+                    column++;
+                    KeymapBlock.Children.Add(border);
+                }
             }
         }
 
@@ -155,6 +187,15 @@ namespace TypingTestApp
         public void ResetButtonClickHandler(object sender, RoutedEventArgs e)
         {
             RestartTest();
+        }
+
+        public void ResetKeyMapButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            foreach (KeyBlock key in keysDictionary.Values)
+            {
+                key.IncorrectClicks = 0;
+
+            }
         }
 
         public Word getWord(int index = -1)
@@ -309,6 +350,7 @@ namespace TypingTestApp
                 else
                 {
                     getLetter().Incorrect();
+                    keysDictionary[getLetter().Content.ToUpper()].IncorrectClicks++;
                 }
                 TestState.LetterIndex++;
             }

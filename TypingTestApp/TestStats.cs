@@ -41,7 +41,6 @@ namespace TypingTestApp
             {
                 double cps = CorrectLetters / TestTimer.Value;
                 int cpm = (int)Math.Floor(cps * 60);
-                WpmHistory.Add(cpm);
                 return cpm;
             }
         }
