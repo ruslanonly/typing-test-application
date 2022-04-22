@@ -11,7 +11,7 @@ namespace TypingTestApp
 {
     public class Caret
     {
-        Rectangle _block;
+        private Rectangle _block;
         private static Timer BlinkTimer;
         private void BlinkAction(object obj, ElapsedEventArgs e)
         {

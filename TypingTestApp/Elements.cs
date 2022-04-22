@@ -15,8 +15,10 @@ namespace TypingTestApp
         public static SolidColorBrush Mistake300 = new SolidColorBrush(Color.FromRgb(232, 93, 4));
         public static SolidColorBrush Mistake400 = new SolidColorBrush(Color.FromRgb(208, 0, 0));
         public static SolidColorBrush Mistake500 = new SolidColorBrush(Color.FromRgb(220, 47, 2));
-        public static SolidColorBrush Incorrect = new SolidColorBrush(Color.FromRgb(248, 150, 30));
         public static SolidColorBrush LightFont = new SolidColorBrush(Color.FromRgb(130, 144, 148));
+        public static SolidColorBrush DefaultLetter = new SolidColorBrush(Color.FromRgb(71, 83, 94));
+        public static SolidColorBrush CorrectLetter = new SolidColorBrush(Color.FromRgb(235, 237, 245));
+        public static SolidColorBrush IncorrectLetter = new SolidColorBrush(Color.FromRgb(248, 150, 30));
     }
     public class Word : StackPanel
     {
@@ -67,19 +69,19 @@ namespace TypingTestApp
             Text = content;
             Content = content;
             FontSize = 23;
-            Foreground = new SolidColorBrush(Color.FromRgb(71, 83, 94));
+            Foreground = Colors.DefaultLetter;
         }
         public void Default()
         {
             Opacity = 1;
-            Foreground = new SolidColorBrush(Color.FromRgb(71, 83, 94));
+            Foreground = Colors.DefaultLetter;
         }
 
         public void Correct()
         {
             isCorrect = true;
             Opacity = 0.5;
-            Foreground = new SolidColorBrush(Color.FromRgb(235, 237, 245));
+            Foreground = Colors.CorrectLetter;
 
         }
 
@@ -87,7 +89,7 @@ namespace TypingTestApp
         {
             isCorrect = false;
             Opacity = 1;
-            Foreground = Colors.Incorrect;
+            Foreground = Colors.IncorrectLetter;
         }
     }
     public class TestOptionButton : Button
@@ -115,7 +117,7 @@ namespace TypingTestApp
             Content = wordGroup.ToString().ToLower();
             Click += onClick;
         }
-        public void onClick(object obj, RoutedEventArgs e)
+        private void onClick(object obj, RoutedEventArgs e)
         {
             ActiveWordGroupButton.Inactive();
             ActiveWordGroupButton = this;
@@ -133,7 +135,7 @@ namespace TypingTestApp
             Content = (int)wordAmount;
             Click += onClick;
         }
-        public void onClick(object obj, RoutedEventArgs e)
+        private void onClick(object obj, RoutedEventArgs e)
         {
             ActiveWordAmountButton.Inactive();
             ActiveWordAmountButton = this;
@@ -146,41 +148,6 @@ namespace TypingTestApp
     {
         public string Character;
         private int _misClick = 0;
-        private void SetColor()
-        {
-            if (_misClick == 0)
-            {
-                Foreground = Colors.LightFont;
-                Parent.SetValue(Border.BorderBrushProperty, Colors.LightFont);
-            } else
-            {
-                if (_misClick > 15)
-                {
-                    Foreground = Colors.Mistake500;
-                    Parent.SetValue(Border.BorderBrushProperty, Colors.Mistake500);
-                }
-                else if (_misClick > 10)
-                {
-                    Foreground = Colors.Mistake400;
-                    Parent.SetValue(Border.BorderBrushProperty, Colors.Mistake400);
-                }
-                else if (_misClick > 7)
-                {
-                    Foreground = Colors.Mistake300;
-                    Parent.SetValue(Border.BorderBrushProperty, Colors.Mistake300);
-                }
-                else if (_misClick > 3)
-                {
-                    Foreground = Colors.Mistake200;
-                    Parent.SetValue(Border.BorderBrushProperty, Colors.Mistake200);
-                }
-                else if (_misClick > 0)
-                {
-                    Foreground = Colors.Mistake100;
-                    Parent.SetValue(Border.BorderBrushProperty, Colors.Mistake100);
-                }
-            }
-        }
         public int IncorrectClicks
         {
             get
@@ -192,7 +159,41 @@ namespace TypingTestApp
             {
 
                 _misClick = value;
-                SetColor();
+                OnMisClickChange();
+            }
+        }
+        private void SetColor(SolidColorBrush color)
+        {
+            Foreground = color;
+            Parent.SetValue(Border.BorderBrushProperty, color);
+        }
+        private void OnMisClickChange()
+        {
+            if (_misClick == 0)
+            {
+                SetColor(Colors.LightFont);
+            } else
+            {
+                if (_misClick > 15)
+                {
+                    SetColor(Colors.Mistake500);
+                }
+                else if (_misClick > 10)
+                {
+                    SetColor(Colors.Mistake400);
+                }
+                else if (_misClick > 7)
+                {
+                    SetColor(Colors.Mistake300);
+                }
+                else if (_misClick > 3)
+                {
+                    SetColor(Colors.Mistake200);
+                }
+                else if (_misClick > 0)
+                {
+                    SetColor(Colors.Mistake100);
+                }
             }
         }
         public KeyBlock(string Key)

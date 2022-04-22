@@ -108,8 +108,6 @@ namespace TypingTestApp
                 }
             }
         }
-
-        public UIElementCollection CurrentWordCollection;
         public async ValueTask<string[]> LoadWordsGroup(WordGroup wordGroup)
         {
             try
@@ -127,6 +125,7 @@ namespace TypingTestApp
                 }
             }
         }
+        public UIElementCollection CurrentWordCollection;
         public async Task RenderText()
         {
             string[] words = await LoadWordsGroup(Config.wordGroup);
