@@ -120,7 +120,7 @@ namespace TypingTestApp
             } catch(Exception exp)
             {
                 MessageBox.Show(exp.Message);
-                using (StreamReader sr = new StreamReader("../../../Assets/Standart.json"))
+                using (StreamReader sr = new StreamReader("../../../Assets/Simple.json"))
                 {
                     return await JsonSerializer.DeserializeAsync<string[]>(sr.BaseStream);
                 }
@@ -131,7 +131,7 @@ namespace TypingTestApp
         {
             string[] words = await LoadWordsGroup(Config.wordGroup);
             WordsBlock.Children.Clear();
-            if (repeatTest)
+            if (TestState.RepeatTest)
             {
                 for(int i = 0; i < CurrentWordCollection.Count; i++)
                 {
@@ -157,7 +157,6 @@ namespace TypingTestApp
         }
 
         public bool isWaitingForTest = true;
-        public bool repeatTest = false;
         public Caret caret;
         public async Task StartTest()
         {
@@ -165,7 +164,6 @@ namespace TypingTestApp
             isWaitingForTest = true;
             caret = new Caret(CaretBlock);
             caret.MoveTo(getLetterPoint(0, 0));
-            //caret.StartBlinking();
         }
 
         public async void RestartTest()

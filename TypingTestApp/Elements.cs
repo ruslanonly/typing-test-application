@@ -119,14 +119,12 @@ namespace TypingTestApp
         {
             this.wordGroup = wordGroup;
             Content = wordGroup.ToString().ToLower();
-            Click += onClick;
-        }
-        private void onClick(object obj, RoutedEventArgs e)
-        {
-            ActiveWordGroupButton.Inactive();
-            ActiveWordGroupButton = this;
-            Active();
-            Config.wordGroup = wordGroup;
+            Click += (object obj, RoutedEventArgs e) => {
+                ActiveWordGroupButton.Inactive();
+                ActiveWordGroupButton = this;
+                Active();
+                Config.wordGroup = wordGroup;
+            };
         }
     }
     public class WordAmountButton : TestOptionButton
@@ -137,14 +135,12 @@ namespace TypingTestApp
         {
             this.wordAmount = wordAmount;
             Content = (int)wordAmount;
-            Click += onClick;
-        }
-        private void onClick(object obj, RoutedEventArgs e)
-        {
-            ActiveWordAmountButton.Inactive();
-            ActiveWordAmountButton = this;
-            Active();
-            Config.wordAmount = wordAmount;
+            Click += (object obj, RoutedEventArgs e) => {
+                ActiveWordAmountButton.Inactive();
+                ActiveWordAmountButton = this;
+                Active();
+                Config.wordAmount = wordAmount;
+            };
         }
     }
 
