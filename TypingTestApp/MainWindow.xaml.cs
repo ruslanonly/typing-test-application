@@ -196,6 +196,12 @@ namespace TypingTestApp
             }
         }
 
+        public void StatHistoryClickHandler(object obj, RoutedEventArgs e)
+        {
+            StatHistoryWindow statHistoryWindow = new StatHistoryWindow(TestStats.StatHistory);
+            statHistoryWindow.Show();
+        }
+
         public Word getWord(int index = -1)
         {
             if (index == -1)
