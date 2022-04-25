@@ -6,8 +6,24 @@ using System.Text;
 
 namespace TypingTestApp
 {
+    public class Stat
+    {
+        public static int Number = 1;
+        public int Wpm;
+        public int Cpm;
+        public double Accuracy;
+        public double Time;
+        public Stat(int Wpm, int Cpm, double Accuracy, double Time)
+        {
+            this.Wpm = Wpm;
+            this.Cpm = Cpm;
+            this.Accuracy = Accuracy;
+            this.Time = Time;
+        }
+    }
     public class TestStats
     {
+        public static List<Stat> StatHistory = new List<Stat>();
         public static List<int> WpmHistory = new List<int>();
         public static int CorrectWords = 0;
         public static int CorrectLetters = 0;
@@ -27,11 +43,11 @@ namespace TypingTestApp
             get
             {
                 double summaryWps = 0;
-                for (int i = 0; i < WpmHistory.Count; i++)
+                for (int i = 0; i < StatHistory.Count; i++)
                 {
-                    summaryWps += WpmHistory[i];
+                    summaryWps += StatHistory[i].Wpm;
                 }
-                return Math.Floor(summaryWps / WpmHistory.Count);
+                return Math.Floor(summaryWps / StatHistory.Count);
             }
         }
 

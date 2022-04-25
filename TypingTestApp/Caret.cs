@@ -38,18 +38,20 @@ namespace TypingTestApp
         {
             _block = block;
         }
+        delegate void CaretPositionSetter(DependencyProperty dp, double point);
         public void MoveTo(Point point)
         {
-            SineEase easingFunction = new SineEase();
-            easingFunction.EasingMode = EasingMode.EaseOut;
-            DoubleAnimation LeftAnimation = new DoubleAnimation();
-            LeftAnimation.To = point.X;
-            LeftAnimation.Duration = TimeSpan.FromMilliseconds(90);
-            DoubleAnimation TopAnimation = new DoubleAnimation();
-            TopAnimation.To = point.Y;
-            TopAnimation.Duration = TimeSpan.FromMilliseconds(90);
-            _block.BeginAnimation(Canvas.LeftProperty, LeftAnimation);
-            _block.BeginAnimation(Canvas.TopProperty, TopAnimation);
+            CaretPositionSetter positionSetter = (dp, value) =>
+            {
+                SineEase easingFunction = new SineEase();
+                easingFunction.EasingMode = EasingMode.EaseOut;
+                DoubleAnimation animation = new DoubleAnimation();
+                animation.To = value;
+                animation.Duration = TimeSpan.FromMilliseconds(90);
+                _block.BeginAnimation(dp, animation);
+            };
+            positionSetter(Canvas.LeftProperty, point.X);
+            positionSetter(Canvas.TopProperty, point.Y);
         }
     }
 }

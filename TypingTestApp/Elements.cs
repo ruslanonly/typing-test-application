@@ -70,6 +70,7 @@ namespace TypingTestApp
             Content = content;
             FontSize = 23;
             Foreground = Colors.DefaultLetter;
+            FontFamily = MainWindow.MainFontFamily;
         }
         public void Default()
         {
@@ -95,7 +96,10 @@ namespace TypingTestApp
     public class TestOptionButton : Button
     {
         public bool isActive;
-        public TestOptionButton() { }
+        public TestOptionButton()
+        {
+            FontFamily = MainWindow.MainFontFamily;
+        }
         public void Active()
         {
             isActive = true;
@@ -157,7 +161,6 @@ namespace TypingTestApp
 
             set
             {
-
                 _misClick = value;
                 OnMisClickChange();
             }
@@ -202,6 +205,7 @@ namespace TypingTestApp
             Text = Key;
             Height = 30;
             Width = 30;
+            FontFamily = MainWindow.MainFontFamily;
         }
     }
 }

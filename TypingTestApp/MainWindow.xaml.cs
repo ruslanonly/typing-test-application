@@ -19,6 +19,7 @@ namespace TypingTestApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static FontFamily MainFontFamily = new FontFamily("Noto Sans Mono");
         public async void InitApp()
         {
             InitializeComponent();
@@ -27,7 +28,6 @@ namespace TypingTestApp
             LoadKeyMap();
             await StartTest();
             caret = new Caret(CaretBlock);
-            WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
         }
         public MainWindow()
         {
@@ -36,10 +36,11 @@ namespace TypingTestApp
 
         public void DisplayTestStats()
         {
-            WPMValue.Text = Convert.ToString(TestStats.Wpm);
-            CPMValue.Text = Convert.ToString(TestStats.Cpm);
-            AccuracyValue.Text = Convert.ToString(TestStats.Accuracy) + "%";
-            TestStats.WpmHistory.Add(TestStats.Wpm);
+            Stat stat = new Stat(TestStats.Wpm, TestStats.Cpm, TestStats.Accuracy, TestStats.Time);
+            WPMValue.Text = Convert.ToString(stat.Wpm);
+            CPMValue.Text = Convert.ToString(stat.Cpm);
+            AccuracyValue.Text = Convert.ToString(stat.Accuracy) + "%";
+            TestStats.StatHistory.Add(stat);
             AverageWPMValue.Text = Convert.ToString(TestStats.AverageWpm);
 
             if (StatsBlock.Opacity != 1)
@@ -220,21 +221,8 @@ namespace TypingTestApp
             Vector letterVector = VisualTreeHelper.GetOffset(getLetter(letterI));
             Vector wordVector = VisualTreeHelper.GetOffset(getWord(wordI));
             double addX = addLetterWidth ? getLetter(letterI).ActualWidth : 0;
-            return new Point(letterVector.X + wordVector.X + addX, wordVector.Y + 30);
-        }
-
-        public void moveCaretTo(Point point)
-        {
-            SineEase easingFunction = new SineEase();
-            easingFunction.EasingMode = EasingMode.EaseOut;
-            DoubleAnimation LeftAnimation = new DoubleAnimation();
-            LeftAnimation.To = point.X;
-            LeftAnimation.Duration = TimeSpan.FromMilliseconds(90);
-            DoubleAnimation TopAnimation = new DoubleAnimation();
-            TopAnimation.To = point.Y;
-            TopAnimation.Duration = TimeSpan.FromMilliseconds(90);
-            CaretBlock.BeginAnimation(Canvas.LeftProperty, LeftAnimation);
-            CaretBlock.BeginAnimation(Canvas.TopProperty, TopAnimation);
+            int LetterMargin = 30;
+            return new Point(letterVector.X + wordVector.X + addX, wordVector.Y + LetterMargin);
         }
 
         public void SpaceHandler()
@@ -247,6 +235,7 @@ namespace TypingTestApp
                 if (writtenWord.isCorrect) TestStats.CorrectWords++;
                 TestState.WordIndex++;
                 TestState.LetterIndex = 0;
+
                 caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
             } else if (TestState.LetterIndex < getWord().Length && !isWordBeginning)
             {
@@ -374,7 +363,16 @@ namespace TypingTestApp
                     if (TestState.WordIndex < (int)Config.wordAmount - 1)
                     {
                         SpaceHandler();
+                    } else
+                    {
+                        bool isLastLetter = TestState.WordIndex == (int)Config.wordAmount - 1 && TestState.LetterIndex == getWord().Length;
+                        if (isLastLetter)
+                        {
+                            StopTest();
+                            RestartTest();
+                        }
                     }
+
                 }
                 else if (e.Key == Key.Back)
                 {
@@ -396,12 +394,6 @@ namespace TypingTestApp
                         isWaitingForTest = false;
                     }
                     RegularKeyHandler(e.Key.ToString().ToLower());
-                    bool isLastLetter = TestState.WordIndex == (int)Config.wordAmount - 1 && TestState.LetterIndex == getWord().Length;
-                    if (isLastLetter)
-                    {
-                        StopTest();
-                        RestartTest();
-                    }
                 }
             }
         }

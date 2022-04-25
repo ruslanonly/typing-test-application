@@ -42,7 +42,7 @@
             <Setter Property="FontSize" Value="17"></Setter>
             <Setter Property="Foreground" Value="#829094"></Setter>
             <Setter Property="HorizontalAlignment" Value="Left"></Setter>
-            <Setter Property="Margin" Value="0 0 5 0"></Setter>
+            <Setter Property="Margin" Value="0 0 3 0"></Setter>
             <Setter Property="Padding" Value="5"></Setter>
         </Style>
 
@@ -88,12 +88,34 @@
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
         </Style>
 
-        <Style x:Key="ResetKeyMapButton" TargetType="Button">
+        <Style x:Key="InvisibleButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="BorderBrush" Value="Transparent"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
             <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Focusable" Value="false"></Setter>
+        </Style>
+
+        <Style x:Key="HistoryButton" TargetType="Button" BasedOn="{StaticResource InvisibleButton}">
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Opacity" Value="0.5"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <ContentPresenter></ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="1"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ResetKeyMapButton" TargetType="Button" BasedOn="{StaticResource InvisibleButton}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="Transparent"></Setter>
@@ -130,10 +152,10 @@
         </Grid.RowDefinitions>
         <Grid Name="TextWrapper" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="0, 0, 0, 10">
             <Canvas x:Name="CaretArea" Panel.ZIndex="3">
-                <Rectangle x:Name="CaretBlock" Fill="#3c60d6" Width="12" Height="3" Canvas.Left="0" Canvas.Top="0">
+                <Rectangle x:Name="CaretBlock" Fill="#3c60d6" Width="14" Height="3" Canvas.Left="0" Canvas.Top="0">
                 </Rectangle>
             </Canvas>
-            <WrapPanel Name="WordsBlock" Orientation="Horizontal" Panel.ZIndex="1">
+            <WrapPanel Name="WordsBlock" x:FieldModifier="public" Orientation="Horizontal" Panel.ZIndex="1">
             </WrapPanel>
         </Grid>
 
@@ -188,6 +210,7 @@
                 <TextBlock Style="{StaticResource StatStyle}">acc</TextBlock>
                 <TextBlock x:Name="AccuracyValue" Grid.Column="1" Style="{StaticResource StatStyle}"></TextBlock>
             </Grid>
+            <Button Grid.Column="2" Grid.Row="5" Foreground="#829094" Style="{StaticResource HistoryButton}" Cursor="Hand">History</Button>
         </StackPanel>
         <Grid x:Name="KeymapBlock" Opacity="0.5" HorizontalAlignment="Center" Margin="0 0 0 50" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
@@ -209,7 +232,6 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="ResetKeyMapButton" Style="{StaticResource ResetKeyMapButton}" Click="ResetKeyMapButtonClickHandler"
                     Panel.ZIndex="100" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" Grid.RowSpan="3" Cursor="Hand">
-                
             </Button>
         </Grid>
     </Grid>
