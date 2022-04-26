@@ -13,13 +13,14 @@
         FontSize="16"
         Background="#262e36">
     <Window.Resources>
-        <Style x:Key="TitlesRow" TargetType="TextBlock">
+        <Style x:Key="TitlesRowItem" TargetType="TextBlock">
             <Setter Property="TextAlignment" Value="Center"></Setter>
             <Setter Property="Foreground" Value="#829094"></Setter>
         </Style>
     </Window.Resources>
-    <Grid Margin="30">
-        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+    <Grid Margin="0 30">
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" 
+                      VerticalScrollBarVisibility="Hidden">
             <StackPanel Name="StatHistoryBlock">
                 <Grid Margin="0 0 0 10">
                     <Grid.ColumnDefinitions>
@@ -29,11 +30,11 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Style="{StaticResource TitlesRow}" Grid.Column="0">N</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRow}" Grid.Column="1">Wpm</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRow}" Grid.Column="2">Cpm</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRow}" Grid.Column="3">Acc</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRow}" Grid.Column="4">Time</TextBlock>
+                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="0">number</TextBlock>
+                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="1">wpm</TextBlock>
+                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="2">cpm</TextBlock>
+                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="3">accuracy</TextBlock>
+                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="4">time</TextBlock>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

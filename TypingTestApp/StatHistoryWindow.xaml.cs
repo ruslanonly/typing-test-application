@@ -25,11 +25,10 @@ namespace TypingTestApp
 
         public class HistoryItem : Grid
         {
-            public static int Count = 1;
-            public HistoryItem(Stat stat)
+            public HistoryItem(Stat stat, int number)
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch;
-                Margin = new Thickness(0, 0, 0, 10);
+                Margin = new Thickness(0, 0, 0, 5);
                 for (int i = 0; i < 5; i++)
                 {
                     ColumnDefinitions.Add(new ColumnDefinition());
@@ -38,7 +37,7 @@ namespace TypingTestApp
                 RowDefinitions.Add(new RowDefinition());
                 for (int i = 0; i < 5; i++)
                 {
-                    Children.Add(GetTextBlock(Count.ToString(), 0));
+                    Children.Add(GetTextBlock(number.ToString(), 0));
                     Children.Add(GetTextBlock(stat.Wpm.ToString(), 1));
                     Children.Add(GetTextBlock(stat.Cpm.ToString(), 2));
                     TextBlock accBlock = GetTextBlock(stat.Accuracy.ToString() + "%", 3);
@@ -51,7 +50,6 @@ namespace TypingTestApp
                     Children.Add(accBlock);
                     Children.Add(GetTextBlock(stat.Time.ToString() + "s", 4));
                 }
-                Count++;
             }
             public TextBlock GetTextBlock(string content, int column)
             {
@@ -59,6 +57,7 @@ namespace TypingTestApp
                 block.Text = content;
                 block.TextAlignment = TextAlignment.Center;
                 block.Foreground = Colors.LightFont;
+                block.Padding = new Thickness(7);
                 Grid.SetColumn(block, column);
                 return block;
             }
@@ -66,9 +65,10 @@ namespace TypingTestApp
 
         public void LoadStatHistory(List<Stat> StatHistory)
         {
+            int Count = 1;
             foreach (Stat stat in StatHistory)
             {
-                HistoryItem historyItem = new HistoryItem(stat);
+                HistoryItem historyItem = new HistoryItem(stat, Count++);
                 StatHistoryBlock.Children.Add(historyItem);
             }
         }
