@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -21,54 +22,115 @@ namespace TypingTestApp
         {
             InitializeComponent();
             LoadStatHistory(StatHistory);
+            LoadSortingCriteriaButtons();
         }
 
-        public class HistoryItem : Grid
+        public enum SortingCriteria
         {
-            public HistoryItem(Stat stat, int number)
-            {
-                HorizontalAlignment = HorizontalAlignment.Stretch;
-                Margin = new Thickness(0, 0, 0, 5);
-                for (int i = 0; i < 5; i++)
-                {
-                    ColumnDefinitions.Add(new ColumnDefinition());
+            Wpm,
+            Accuracy,
+            Time
+        }
 
-                }
-                RowDefinitions.Add(new RowDefinition());
-                for (int i = 0; i < 5; i++)
-                {
-                    Children.Add(GetTextBlock(number.ToString(), 0));
-                    Children.Add(GetTextBlock(stat.Wpm.ToString(), 1));
-                    Children.Add(GetTextBlock(stat.Cpm.ToString(), 2));
-                    TextBlock accBlock = GetTextBlock(stat.Accuracy.ToString() + "%", 3);
-                    if(stat.Accuracy < 50)
-                    {
-                        accBlock.Foreground = Colors.Mistake300;
-                        Background = Colors.Mistake100;
-                        Opacity = 0.7;
-                    }
-                    Children.Add(accBlock);
-                    Children.Add(GetTextBlock(stat.Time.ToString() + "s", 4));
-                }
-            }
-            public TextBlock GetTextBlock(string content, int column)
+        public delegate void SCClickHandler();
+        public class SortingCriteriaButton : Button
+        {
+            public static SortingCriteriaButton Current;
+            public SortingCriteria sortingCriteria;
+            public void Active()
             {
-                TextBlock block = new TextBlock();
-                block.Text = content;
-                block.TextAlignment = TextAlignment.Center;
-                block.Foreground = Colors.LightFont;
-                block.Padding = new Thickness(7);
-                Grid.SetColumn(block, column);
-                return block;
+                Style = (Style)FindResource("ActiveSortingCriteriaButton");
+            }
+
+            public void Default()
+            {
+                Style = (Style)FindResource("SortingCriteriaButton");
+            }
+
+            public SortingCriteriaButton(SortingCriteria sortingCriteria, SCClickHandler clickHandler)
+            {
+                Content = sortingCriteria.ToString();
+                this.sortingCriteria = sortingCriteria;
+                Click += (object obj, RoutedEventArgs e) =>
+                {
+                    if (Current != null) Current.Default();
+                    Active();
+                    Current = this;
+                    CurrentSortingCriteria = this.sortingCriteria;
+                    DoStatHistorySorting = true;
+                    clickHandler();
+                };
             }
         }
 
+        public void LoadSortingCriteriaButtons()
+        {
+            Array SortingCriterias = Enum.GetValues(typeof(SortingCriteria));
+            int columnCounter = 1;
+            foreach (SortingCriteria sc in SortingCriterias)
+            {
+                SCClickHandler clickHandler = () =>
+                {
+                    StatHistoryBlock.Children.Clear();
+                    LoadStatHistory(CurrentStatHistory);
+                };
+                SortingCriteriaButton button = new SortingCriteriaButton(sc, clickHandler);
+                Grid.SetColumn(button, columnCounter++);
+                SortingsCriteriaButtons.Children.Add(button);
+                button.Default();
+            }
+        }
+
+        public List<Stat> HandleStatHistory(List<Stat> StatHistory, SortingCriteria sortingCriteria)
+        {
+            IEnumerable<Stat> statEnumerable = StatHistory;
+            switch (sortingCriteria)
+            {
+                case SortingCriteria.Wpm:
+                    {
+                        statEnumerable = from stat in statEnumerable
+                                         orderby stat.Wpm descending
+                                         select stat;
+                        break;
+                    }
+                case SortingCriteria.Accuracy:
+                    {
+                        statEnumerable = from stat in statEnumerable
+                                         orderby stat.Accuracy descending
+                                         select stat;
+                        break;
+                    }
+                case SortingCriteria.Time:
+                    {
+                        statEnumerable = from stat in statEnumerable
+                                         orderby stat.Time
+                                         select stat;
+                        break;
+                    }
+            }
+            return statEnumerable.ToList();
+        }
+
+        public List<Stat> CurrentStatHistory;
+        static public SortingCriteria CurrentSortingCriteria = SortingCriteria.Wpm;
+        static public bool DoStatHistorySorting = false;
         public void LoadStatHistory(List<Stat> StatHistory)
         {
+            CurrentStatHistory = StatHistory;
+            List<Stat> HandledStatHistory;
+            if (DoStatHistorySorting)
+            {
+                HandledStatHistory = HandleStatHistory(StatHistory, CurrentSortingCriteria);
+            } else
+            {
+                HandledStatHistory = StatHistory;
+            }
+
             int Count = 1;
-            foreach (Stat stat in StatHistory)
+            foreach (Stat stat in HandledStatHistory)
             {
                 HistoryItem historyItem = new HistoryItem(stat, Count++);
+                historyItem.Background = Colors.SecondaryBg[Count % 2];
                 StatHistoryBlock.Children.Add(historyItem);
             }
         }

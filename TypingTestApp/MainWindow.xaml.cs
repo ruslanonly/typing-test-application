@@ -372,6 +372,9 @@ namespace TypingTestApp
                         bool isLastLetter = TestState.WordIndex == (int)Config.wordAmount - 1 && TestState.LetterIndex == getWord().Length;
                         if (isLastLetter)
                         {
+                            Word word = getWord();
+                            word.Analyse();
+                            if (word.isCorrect) TestStats.CorrectWords++;
                             StopTest();
                             RestartTest();
                         }

@@ -19,6 +19,8 @@ namespace TypingTestApp
         public static SolidColorBrush DefaultLetter = new SolidColorBrush(Color.FromRgb(71, 83, 94));
         public static SolidColorBrush CorrectLetter = new SolidColorBrush(Color.FromRgb(235, 237, 245));
         public static SolidColorBrush IncorrectLetter = new SolidColorBrush(Color.FromRgb(248, 150, 30));
+        public static SolidColorBrush MainBg = new SolidColorBrush(Color.FromRgb(38, 46, 54));
+        public static SolidColorBrush[] SecondaryBg = { new SolidColorBrush(Color.FromRgb(43, 50, 59)), new SolidColorBrush(Color.FromRgb(34, 41, 49)) };
     }
     public class Word : StackPanel
     {
@@ -202,6 +204,44 @@ namespace TypingTestApp
             Height = 30;
             Width = 30;
             FontFamily = MainWindow.MainFontFamily;
+        }
+
+    }
+    public class HistoryItem : Grid
+    {
+        public HistoryItem(Stat stat, int number)
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            Margin = new Thickness(0, 0, 0, 5);
+            for (int i = 0; i < 5; i++)
+            {
+                ColumnDefinitions.Add(new ColumnDefinition());
+
+            }
+            RowDefinitions.Add(new RowDefinition());
+            for (int i = 0; i < 5; i++)
+            {
+                Children.Add(GetTextBlock(number.ToString(), 0));
+                Children.Add(GetTextBlock(stat.Wpm.ToString(), 1));
+                Children.Add(GetTextBlock(stat.Cpm.ToString(), 2));
+                TextBlock accBlock = GetTextBlock(stat.Accuracy.ToString() + "%", 3);
+                if (stat.Accuracy < 50)
+                {
+                    Opacity = 0.5;
+                }
+                Children.Add(accBlock);
+                Children.Add(GetTextBlock(stat.Time.ToString() + "s", 4));
+            }
+        }
+        public TextBlock GetTextBlock(string content, int column)
+        {
+            TextBlock block = new TextBlock();
+            block.Text = content;
+            block.TextAlignment = TextAlignment.Center;
+            block.Foreground = Colors.LightFont;
+            block.Padding = new Thickness(7);
+            Grid.SetColumn(block, column);
+            return block;
         }
     }
 }

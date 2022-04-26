@@ -6,6 +6,7 @@ namespace TypingTestApp
 {
     public enum WordAmount
     {
+        One = 3,
         Ten = 10,
         Twenty = 20,
         Thirty = 30,

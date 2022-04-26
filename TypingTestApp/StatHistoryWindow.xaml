@@ -13,30 +13,68 @@
         FontSize="16"
         Background="#262e36">
     <Window.Resources>
-        <Style x:Key="TitlesRowItem" TargetType="TextBlock">
+        <Style x:Key="HistoryTextBlock" TargetType="TextBlock">
             <Setter Property="TextAlignment" Value="Center"></Setter>
             <Setter Property="Foreground" Value="#829094"></Setter>
         </Style>
+
+        <Style x:Key="SortingCriteriaButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Foreground" Value="#829094"></Setter>
+            <Setter Property="FontSize" Value="17"></Setter>
+            <Setter Property="Opacity" Value="0.5"></Setter>
+            <Setter Property="Padding" Value="10 5 10 5"></Setter>
+            <Setter Property="Focusable" Value="False"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"></Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Opacity" Value="0.7"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ActiveSortingCriteriaButton" TargetType="Button" BasedOn="{StaticResource SortingCriteriaButton}">
+            <Setter Property="Foreground" Value="#4895ef"></Setter>
+            <Setter Property="Opacity" Value="1"></Setter>
+        </Style>
     </Window.Resources>
-    <Grid Margin="0 30">
-        <ScrollViewer HorizontalScrollBarVisibility="Hidden" 
+    <Grid Margin="0 15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Style="{StaticResource HistoryTextBlock}" Grid.Column="0">number</TextBlock>
+            <TextBlock Style="{StaticResource HistoryTextBlock}" Grid.Column="1">wpm</TextBlock>
+            <TextBlock Style="{StaticResource HistoryTextBlock}" Grid.Column="2">cpm</TextBlock>
+            <TextBlock Style="{StaticResource HistoryTextBlock}" Grid.Column="3">accuracy</TextBlock>
+            <TextBlock Style="{StaticResource HistoryTextBlock}" Grid.Column="4">time</TextBlock>
+        </Grid>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" 
                       VerticalScrollBarVisibility="Hidden">
             <StackPanel Name="StatHistoryBlock">
-                <Grid Margin="0 0 0 10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="0">number</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="1">wpm</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="2">cpm</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="3">accuracy</TextBlock>
-                    <TextBlock Style="{StaticResource TitlesRowItem}" Grid.Column="4">time</TextBlock>
-                </Grid>
+
             </StackPanel>
         </ScrollViewer>
+
+        <Grid x:Name="SortingsCriteriaButtons" Grid.Row="2" Margin="10 10 10 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Style="{StaticResource HistoryTextBlock}" VerticalAlignment="Center">sort by</TextBlock>
+        </Grid>
     </Grid>
 </Window>
