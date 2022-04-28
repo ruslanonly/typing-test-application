@@ -32,8 +32,8 @@ namespace TypingTestApp
             Time
         }
 
-        public delegate void SCClickHandler();
-        public class SortingCriteriaButton : Button
+        public delegate void SCBClickHandler();
+        public class SortingCriteriaButton : Button // SCB
         {
             public static SortingCriteriaButton Current;
             public SortingCriteria sortingCriteria;
@@ -47,7 +47,7 @@ namespace TypingTestApp
                 Style = (Style)FindResource("SortingCriteriaButton");
             }
 
-            public SortingCriteriaButton(SortingCriteria sortingCriteria, SCClickHandler clickHandler)
+            public SortingCriteriaButton(SortingCriteria sortingCriteria, SCBClickHandler clickHandler)
             {
                 Content = sortingCriteria.ToString();
                 this.sortingCriteria = sortingCriteria;
@@ -69,7 +69,7 @@ namespace TypingTestApp
             int columnCounter = 1;
             foreach (SortingCriteria sc in SortingCriterias)
             {
-                SCClickHandler clickHandler = () =>
+                SCBClickHandler clickHandler = () =>
                 {
                     StatHistoryBlock.Children.Clear();
                     LoadStatHistory(CurrentStatHistory);
@@ -103,6 +103,7 @@ namespace TypingTestApp
                 case SortingCriteria.Time:
                     {
                         statEnumerable = from stat in statEnumerable
+                                         where stat.Accuracy > 50
                                          orderby stat.Time
                                          select stat;
                         break;
