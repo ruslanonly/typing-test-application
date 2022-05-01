@@ -92,6 +92,9 @@ namespace TypingTestApp
                 {
                     button.Inactive();
                 }
+                button.Click += (object obj, RoutedEventArgs e) => {
+                    RestartTest();
+                };
             }
 
             Array WordAmountValues = Enum.GetValues(typeof(WordAmount));
@@ -107,6 +110,9 @@ namespace TypingTestApp
                 {
                     button.Inactive();
                 }
+                button.Click += (object obj, RoutedEventArgs e) => {
+                    RestartTest();
+                };
             }
         }
         public async ValueTask<string[]> LoadWordsGroup(WordGroup wordGroup)
@@ -120,7 +126,7 @@ namespace TypingTestApp
             } catch(Exception exp)
             {
                 MessageBox.Show(exp.Message);
-                using (StreamReader sr = new StreamReader("../../../Assets/Simple.json"))
+                using (StreamReader sr = new StreamReader("../../../Assets/English.json"))
                 {
                     return await JsonSerializer.DeserializeAsync<string[]>(sr.BaseStream);
                 }
@@ -130,6 +136,13 @@ namespace TypingTestApp
         public async Task RenderText()
         {
             string[] words = await LoadWordsGroup(Config.wordGroup);
+            if (Config.wordGroup == WordGroup.Russian)
+            {
+                IEnumerable<string> array = from word in words
+                              where !(word.Contains("б") || word.Contains("ю") || word.Contains("э") || word.Contains("ж") || word.Contains("х") || word.Contains("ъ"))
+                              select word;
+                words = array.ToArray();
+            }
             WordsBlock.Children.Clear();
             if (TestState.RepeatTest)
             {
@@ -330,8 +343,16 @@ namespace TypingTestApp
             }
         }
 
+        public Dictionary<string, string> TranslatedKeys = new Dictionary<string, string>
+        {
+            { "q", "й" }, { "w", "ц" }, { "e", "у" }, { "r", "к" }, { "t", "е" }, { "y", "н" }, { "u", "г" }, { "i", "ш" }, { "o", "щ" }, { "p", "з" },
+            { "a", "ф" }, { "s", "ы" }, { "d", "в" }, { "f", "а" }, { "g", "п" }, { "h", "р" }, { "j", "о" }, { "k", "л" }, { "l", "д" },
+            { "z", "я" }, { "x", "ч" }, { "c", "с" }, { "v", "м" }, { "b", "и" }, { "n", "т" }, { "m", "ь" }, { ",", "б" },
+        };
+
         public void RegularKeyHandler(string key)
         {
+            if (Config.wordGroup == WordGroup.Russian) key = TranslatedKeys[key];
             if (TestState.LetterIndex < getWord().Length)
             {
                 if (key == getLetter().Content)
@@ -342,6 +363,7 @@ namespace TypingTestApp
                 else
                 {
                     getLetter().Incorrect();
+                    if (Config.wordGroup == WordGroup.English)
                     keysDictionary[getLetter().Content.ToUpper()].IncorrectClicks++;
                 }
                 TestState.LetterIndex++;

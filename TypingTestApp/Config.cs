@@ -15,9 +15,8 @@ namespace TypingTestApp
     }
     public enum WordGroup
     {
-        Simple,
-        Medium,
-        Hard,
+        English,
+        Russian
     }
 
     class Config
@@ -29,7 +28,7 @@ namespace TypingTestApp
         static public void InitConfig()
         {
             Words = 10;
-            wordGroup = WordGroup.Simple;
+            wordGroup = WordGroup.English;
             wordAmount = WordAmount.Thirty;
         }
     }
