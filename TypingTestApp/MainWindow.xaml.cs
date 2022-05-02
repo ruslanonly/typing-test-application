@@ -220,6 +220,13 @@ namespace TypingTestApp
             RestartTest();
         }
 
+        public void InfoButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(sender.GetType().ToString());
+            MessageBox.Show("Tab to Continue. It renders new text.\nCtrl + R to Repeat test with the same words.", "Information");
+
+        }
+
         public void ResetKeyMapButtonClickHandler(object sender, RoutedEventArgs e)
         {
             foreach (KeyBlock key in keysDictionary.Values)
@@ -401,6 +408,7 @@ namespace TypingTestApp
         {
             if (e.Key == Key.R && (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)))
             {
+                TestState.RepeatTest = true;
                 RestartTest();
             } else
             {
