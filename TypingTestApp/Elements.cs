@@ -34,6 +34,15 @@ namespace TypingTestApp
             }
         }
 
+        public void Default()
+        {
+            for(int i = 0; i < Children.Count; i++)
+            {
+                Letter letter = Children[i] as Letter;
+                letter.Default();
+            }
+        }
+
         public void Analyse()
         {
             bool res = true;

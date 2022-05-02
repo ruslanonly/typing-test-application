@@ -132,7 +132,19 @@ namespace TypingTestApp
                 }
             }
         }
-        public UIElementCollection CurrentWordCollection;
+        public Word[] CurrentWordCollection;
+        public Word[] UIElementCollectionToWordArray(UIElementCollection collection)
+        {
+            Word[] array = new Word[collection.Count];
+            for (int i = 0; i < collection.Count; i++)
+            {
+                Word word = (Word)collection[i];
+                word.Default();
+                array[i] = word;
+
+            }
+            return array;
+        }
         public async Task RenderText()
         {
             string[] words = await LoadWordsGroup(Config.wordGroup);
@@ -146,10 +158,12 @@ namespace TypingTestApp
             WordsBlock.Children.Clear();
             if (TestState.RepeatTest)
             {
-                for(int i = 0; i < CurrentWordCollection.Count; i++)
+                for (int i = 0; i < CurrentWordCollection.Length; i++)
                 {
-                    WordsBlock.Children.Add(CurrentWordCollection[i]);
+                    Word word = (Word)CurrentWordCollection[i];
+                    WordsBlock.Children.Add(word);
                 }
+                TestState.RepeatTest = false;
             } else
             {
                 Random randomIndex = new Random();
@@ -165,7 +179,6 @@ namespace TypingTestApp
                     }
                     WordsBlock.Children.Add(word);
                 }
-                CurrentWordCollection = WordsBlock.Children;
             }
         }
 
@@ -174,6 +187,7 @@ namespace TypingTestApp
         public async Task StartTest()
         {
             await RenderText();
+            CurrentWordCollection = UIElementCollectionToWordArray(WordsBlock.Children);
             isWaitingForTest = true;
             caret = new Caret(CaretBlock);
             caret.MoveTo(getLetterPoint(0, 0));
@@ -196,6 +210,12 @@ namespace TypingTestApp
         }
 
         public void ResetButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            TestState.RepeatTest = true;
+            RestartTest();
+        }
+
+        public void ContinueButtonClickHandler(object sender, RoutedEventArgs e)
         {
             RestartTest();
         }
