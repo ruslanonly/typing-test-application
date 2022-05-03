@@ -222,7 +222,6 @@ namespace TypingTestApp
 
         public void InfoButtonClickHandler(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(sender.GetType().ToString());
             MessageBox.Show("Tab to Continue. It renders new text.\nCtrl + R to Repeat test with the same words.", "Information");
 
         }
