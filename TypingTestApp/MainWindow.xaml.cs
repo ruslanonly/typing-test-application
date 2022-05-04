@@ -409,6 +409,9 @@ namespace TypingTestApp
             {
                 TestState.RepeatTest = true;
                 RestartTest();
+            } else if (e.Key == Key.Tab)
+            {
+                RestartTest();
             } else
             {
                 if (e.Key == Key.Space)
