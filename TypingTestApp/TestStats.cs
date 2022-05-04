@@ -8,7 +8,6 @@ namespace TypingTestApp
 {
     public class Stat
     {
-        public static int Number = 1;
         public int Wpm;
         public int Cpm;
         public double Accuracy;
@@ -24,7 +23,6 @@ namespace TypingTestApp
     public class TestStats
     {
         public static List<Stat> StatHistory = new List<Stat>();
-        public static List<int> WpmHistory = new List<int>();
         public static int CorrectWords = 0;
         public static int CorrectLetters = 0;
         public static int PressedKeys = 0;
