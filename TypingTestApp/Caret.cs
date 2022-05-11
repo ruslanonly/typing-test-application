@@ -12,22 +12,6 @@ namespace TypingTestApp
     public class Caret
     {
         private Rectangle _block;
-        private static Timer BlinkTimer;
-        private void BlinkAction(object obj, ElapsedEventArgs e)
-        {
-            _block.Opacity = _block.Opacity == 1 ? 0 : 1;
-        }
-        public void StartBlinking()
-        {
-            BlinkTimer = new Timer(1000);
-            BlinkTimer.Elapsed += BlinkAction;
-            BlinkTimer.Start();
-        }
-
-        public void StopBlinking()
-        {
-            BlinkTimer.Stop();
-        }
         public Caret(Rectangle block)
         {
             _block = block;
