@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:TypingTestApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <FontFamily x:Key="NotoSansMono">./Fonts/NotoSansMono-Regular.ttf#Noto Sans Mono</FontFamily>
     </Application.Resources>
 </Application>
 

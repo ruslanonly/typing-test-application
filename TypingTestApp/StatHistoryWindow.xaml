@@ -11,7 +11,8 @@
         MinWidth="450"
         MinHeight="400"
         FontSize="16"
-        Background="#262e36">
+        Background="#262e36"
+        FontFamily="{StaticResource NotoSansMono}">
     <Window.Resources>
         <Style x:Key="HistoryTextBlock" TargetType="TextBlock">
             <Setter Property="TextAlignment" Value="Center"></Setter>

@@ -19,7 +19,6 @@ namespace TypingTestApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static FontFamily MainFontFamily = new FontFamily("Noto Sans Mono");
         public async void InitApp()
         {
             InitializeComponent();
@@ -28,6 +27,8 @@ namespace TypingTestApp
             LoadKeyMap();
             await StartTest();
             caret = new Caret(CaretBlock);
+            Thread.Sleep(250);
+            Animate.FadeIn(TestWrapper);
         }
         public MainWindow()
         {
@@ -167,7 +168,8 @@ namespace TypingTestApp
             } else
             {
                 Random randomIndex = new Random();
-                for (int i = 0; i < (int)Config.wordAmount; i++)
+                int wordAmount = (int)Config.wordAmount;
+                for (int i = 0; i < wordAmount; i++)
                 {
                     int indexInArray = randomIndex.Next(0, words.Length);
                     string wordContent = words[indexInArray];
