@@ -26,6 +26,10 @@ namespace TypingTestApp
         public static int CorrectWords = 0;
         public static int CorrectLetters = 0;
         public static int PressedKeys = 0;
+        public static Stat GetCurrentStat()
+        {
+            return new Stat(Wpm, Cpm, Accuracy, Time);
+        }
         public static int Wpm
         {
             get

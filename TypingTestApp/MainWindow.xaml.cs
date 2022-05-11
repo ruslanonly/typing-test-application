@@ -36,7 +36,7 @@ namespace TypingTestApp
 
         public void DisplayTestStats()
         {
-            Stat stat = new Stat(TestStats.Wpm, TestStats.Cpm, TestStats.Accuracy, TestStats.Time);
+            Stat stat = TestStats.GetCurrentStat();
             WPMValue.Text = Convert.ToString(stat.Wpm);
             CPMValue.Text = Convert.ToString(stat.Cpm);
             AccuracyValue.Text = Convert.ToString(stat.Accuracy) + "%";
@@ -231,7 +231,6 @@ namespace TypingTestApp
             foreach (KeyBlock key in keysDictionary.Values)
             {
                 key.IncorrectClicks = 0;
-
             }
         }
 
@@ -393,6 +392,7 @@ namespace TypingTestApp
                     keysDictionary[getLetter().Content.ToUpper()].IncorrectClicks++;
                 }
                 TestState.LetterIndex++;
+                TestStats.PressedKeys++;
             }
             if (TestState.LetterIndex < getWord().Length)
             {
@@ -401,7 +401,6 @@ namespace TypingTestApp
             {
                 caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
             }
-            TestStats.PressedKeys++;
         }
         private void KeyDownHandler(object sender, KeyEventArgs e)
         {
@@ -449,7 +448,6 @@ namespace TypingTestApp
                     if (isWaitingForTest)
                     {
                         TestTimer.Start();
-                        //caret.StopBlinking();
                         isWaitingForTest = false;
                     }
                     RegularKeyHandler(e.Key.ToString().ToLower());

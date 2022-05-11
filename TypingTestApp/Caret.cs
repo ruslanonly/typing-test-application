@@ -15,13 +15,7 @@ namespace TypingTestApp
         private static Timer BlinkTimer;
         private void BlinkAction(object obj, ElapsedEventArgs e)
         {
-            if (_block.Opacity == 1)
-            {
-                _block.Opacity = 0;
-            } else
-            {
-                _block.Opacity = 1;
-            }
+            _block.Opacity = _block.Opacity == 1 ? 0 : 1;
         }
         public void StartBlinking()
         {
