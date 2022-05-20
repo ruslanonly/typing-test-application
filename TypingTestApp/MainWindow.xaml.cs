@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace TypingTestApp
 {
@@ -197,9 +198,9 @@ namespace TypingTestApp
 
         public async void RestartTest()
         {
-            await StartTest();
             TestState.Reset();
             TestStats.Reset();
+            await StartTest();
             TestTimer.Stop();
             TestTimer.Reset();
             caret.MoveTo(getLetterPoint(0, 0));

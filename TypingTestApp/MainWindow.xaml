@@ -164,10 +164,8 @@
                 <Rectangle x:Name="CaretBlock" Fill="#3c60d6" Width="14" Height="3" Canvas.Left="0" Canvas.Top="0">
                 </Rectangle>
             </Canvas>
-            <ScrollViewer MinHeight="90" VerticalScrollBarVisibility="Hidden">
-                <WrapPanel Name="WordsBlock" x:FieldModifier="public" Orientation="Horizontal" Panel.ZIndex="1">
-                </WrapPanel>
-            </ScrollViewer>
+            <WrapPanel Name="WordsBlock" x:FieldModifier="public" Orientation="Horizontal" Panel.ZIndex="1">
+            </WrapPanel>
         </Grid>
 
         <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Center" Orientation="Horizontal"
