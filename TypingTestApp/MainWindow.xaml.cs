@@ -20,6 +20,10 @@ namespace TypingTestApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainWindow()
+        {
+            InitApp();
+        }
         public async void InitApp()
         {
             InitializeComponent();
@@ -31,11 +35,7 @@ namespace TypingTestApp
             Thread.Sleep(250);
             Animate.FadeIn(TestWrapper);
         }
-        public MainWindow()
-        {
-            InitApp();
-        }
-
+        
         public void DisplayTestStats()
         {
             Stat stat = TestStats.GetCurrentStat();
@@ -203,8 +203,6 @@ namespace TypingTestApp
             await StartTest();
             TestTimer.Stop();
             TestTimer.Reset();
-            caret.MoveTo(getLetterPoint(0, 0));
-            WordsBlock.SetValue(WrapPanel.HeightProperty, getLetter().Height * 3);
         }
 
         public void StopTest()
@@ -270,7 +268,7 @@ namespace TypingTestApp
             return new Point(letterVector.X + wordVector.X + addX, wordVector.Y + LetterMargin);
         }
 
-        public void SpaceHandler()
+        private void SpaceHandler()
         {
             bool isWordBeginning = TestState.LetterIndex == 0;
             if (TestState.LetterIndex == getWord().Length)
@@ -297,7 +295,7 @@ namespace TypingTestApp
             }
         }
 
-        public void BackSpaceHandler()
+        private void BackSpaceHandler()
         {
             bool isWordBeginning = TestState.LetterIndex == 0;
             if (Keyboard.IsKeyDown(Key.LeftCtrl))
@@ -378,7 +376,7 @@ namespace TypingTestApp
             { "z", "я" }, { "x", "ч" }, { "c", "с" }, { "v", "м" }, { "b", "и" }, { "n", "т" }, { "m", "ь" }, { ",", "б" },
         };
 
-        public void RegularKeyHandler(string key)
+        private void RegularKeyHandler(string key)
         {
             if (Config.wordGroup == WordGroup.Russian) key = TranslatedKeys[key];
             if (TestState.LetterIndex < getWord().Length)

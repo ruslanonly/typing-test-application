@@ -18,22 +18,6 @@ namespace TypingTestApp
         {
             _block = block;
         }
-
-        public System.Timers.Timer BlinkInterval;
-        public void StartBlinking()
-        {
-            BlinkInterval = new System.Timers.Timer();
-            BlinkInterval.Interval = 1000;
-            BlinkInterval.Elapsed += (object obj, ElapsedEventArgs e) => {
-                _block.Opacity = _block.Opacity == 1 ? 0 : 1;
-            };
-            BlinkInterval.Start();
-        }
-
-        public void stopBlinking()
-        {
-            BlinkInterval.Stop();
-        }
         delegate void CaretPositionSetter(DependencyProperty dp, double point);
         public void MoveTo(Point point)
         {

@@ -92,9 +92,6 @@ namespace TypingTestApp
     public class TestOptionButton : Button
     {
         public bool isActive;
-        public TestOptionButton()
-        {
-        }
         public void Active()
         {
             isActive = true;
@@ -110,7 +107,7 @@ namespace TypingTestApp
     {
         public WordGroup wordGroup;
         public static WordGroupButton ActiveWordGroupButton;
-        public WordGroupButton(WordGroup wordGroup) : base()
+        public WordGroupButton(WordGroup wordGroup)
         {
             this.wordGroup = wordGroup;
             Content = wordGroup.ToString().ToLower();
@@ -126,7 +123,7 @@ namespace TypingTestApp
     {
         public WordAmount wordAmount;
         public static WordAmountButton ActiveWordAmountButton;
-        public WordAmountButton(WordAmount wordAmount) : base()
+        public WordAmountButton(WordAmount wordAmount)
         {
             this.wordAmount = wordAmount;
             Content = (int)wordAmount;
