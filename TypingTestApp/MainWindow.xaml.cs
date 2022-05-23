@@ -47,18 +47,11 @@ namespace TypingTestApp
                 Animate.FadeIn(StatsBlock);
             }
         }
-
-        public string[][] keyMap = { 
-            new string[] { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
-            new string[] { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
-            new string[] { "Z", "X", "C", "V", "B", "N", "M" },
-        };
-        Dictionary<string, KeyBlock> keysDictionary = new Dictionary<string, KeyBlock>();
         public void LoadKeyMap()
         {
-            for(int i = 0; i < keyMap.Length; i++)
+            for(int i = 0; i < Misc.keyMap.Length; i++)
             {
-                string[] keyChars = keyMap[i];
+                string[] keyChars = Misc.keyMap[i];
                 int column = 0;
                 foreach (string ch in keyChars)
                 {
@@ -114,39 +107,10 @@ namespace TypingTestApp
                 };
             }
         }
-        public async ValueTask<string[]> LoadWordsGroup(WordGroup wordGroup)
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader("../../../Assets/" + wordGroup.ToString() + ".json"))
-                {
-                    return await JsonSerializer.DeserializeAsync<string[]>(sr.BaseStream);
-                }
-            } catch(Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-                using (StreamReader sr = new StreamReader("../../../Assets/English.json"))
-                {
-                    return await JsonSerializer.DeserializeAsync<string[]>(sr.BaseStream);
-                }
-            }
-        }
-        public Word[] CurrentWordCollection;
-        public Word[] UIElementCollectionToWordArray(UIElementCollection collection)
-        {
-            Word[] array = new Word[collection.Count];
-            for (int i = 0; i < collection.Count; i++)
-            {
-                Word word = (Word)collection[i];
-                word.Default();
-                array[i] = word;
-
-            }
-            return array;
-        }
+        
         public async Task RenderText()
         {
-            string[] words = await LoadWordsGroup(Config.wordGroup);
+            string[] words = await Misc.LoadWordsGroup(Config.wordGroup);
             if (Config.wordGroup == WordGroup.Russian)
             {
                 IEnumerable<string> array = from word in words
@@ -181,63 +145,6 @@ namespace TypingTestApp
                 }
             }
         }
-
-        public bool isWaitingForTest = true;
-        public Caret caret;
-        public async Task StartTest()
-        {
-            await RenderText();
-            CurrentWordCollection = UIElementCollectionToWordArray(WordsBlock.Children);
-            isWaitingForTest = true;
-            caret = new Caret(CaretBlock);
-            caret.MoveTo(getLetterPoint(0, 0));
-        }
-
-        public async void RestartTest()
-        {
-            TestState.Reset();
-            TestStats.Reset();
-            await StartTest();
-            TestTimer.Stop();
-            TestTimer.Reset();
-        }
-
-        public void StopTest()
-        {
-            DisplayTestStats();
-        }
-
-        public void ResetButtonClickHandler(object sender, RoutedEventArgs e)
-        {
-            TestState.RepeatTest = true;
-            RestartTest();
-        }
-
-        public void ContinueButtonClickHandler(object sender, RoutedEventArgs e)
-        {
-            RestartTest();
-        }
-
-        public void InfoButtonClickHandler(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Tab to Continue. It renders new text.\nCtrl + R to Repeat test with the same words.", "Information");
-
-        }
-
-        public void ResetKeyMapButtonClickHandler(object sender, RoutedEventArgs e)
-        {
-            foreach (KeyBlock key in keysDictionary.Values)
-            {
-                key.IncorrectClicks = 0;
-            }
-        }
-
-        public void StatHistoryClickHandler(object obj, RoutedEventArgs e)
-        {
-            StatHistoryWindow statHistoryWindow = new StatHistoryWindow(TestStats.StatHistory);
-            statHistoryWindow.Show();
-        }
-
         public Word getWord(int index = -1)
         {
             if (index == -1)
@@ -263,6 +170,64 @@ namespace TypingTestApp
             double addX = addLetterWidth ? getLetter(letterI).ActualWidth : 0;
             int LetterMargin = 30;
             return new Point(letterVector.X + wordVector.X + addX, wordVector.Y + LetterMargin);
+        }
+
+        Dictionary<string, KeyBlock> keysDictionary = new Dictionary<string, KeyBlock>();
+        public Word[] CurrentWordCollection;
+        public bool isWaitingForTest = true;
+        public Caret caret;
+        public async Task StartTest()
+        {
+            await RenderText();
+            CurrentWordCollection = Misc.UIElementCollectionToWordArray(WordsBlock.Children);
+            isWaitingForTest = true;
+            caret = new Caret(CaretBlock);
+            caret.MoveTo(getLetterPoint(0, 0));
+        }
+
+        public async void RestartTest()
+        {
+            TestState.Reset();
+            TestStats.Reset();
+            await StartTest();
+            TestTimer.Stop();
+            TestTimer.Reset();
+        }
+
+        public void StopTest()
+        {
+            DisplayTestStats();
+        }
+
+        private void ResetButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            TestState.RepeatTest = true;
+            RestartTest();
+        }
+
+        private void ContinueButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            RestartTest();
+        }
+
+        public void InfoButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Tab to Continue. It renders new text.\nCtrl + R to Repeat test with the same words.", "Information");
+
+        }
+
+        private void ResetKeyMapButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            foreach (KeyBlock key in keysDictionary.Values)
+            {
+                key.IncorrectClicks = 0;
+            }
+        }
+
+        private void StatHistoryClickHandler(object obj, RoutedEventArgs e)
+        {
+            StatHistoryWindow statHistoryWindow = new StatHistoryWindow(TestStats.StatHistory);
+            statHistoryWindow.Show();
         }
 
         private void SpaceHandler()
@@ -356,16 +321,9 @@ namespace TypingTestApp
             }
         }
 
-        public Dictionary<string, string> TranslatedKeys = new Dictionary<string, string>
-        {
-            { "q", "й" }, { "w", "ц" }, { "e", "у" }, { "r", "к" }, { "t", "е" }, { "y", "н" }, { "u", "г" }, { "i", "ш" }, { "o", "щ" }, { "p", "з" },
-            { "a", "ф" }, { "s", "ы" }, { "d", "в" }, { "f", "а" }, { "g", "п" }, { "h", "р" }, { "j", "о" }, { "k", "л" }, { "l", "д" },
-            { "z", "я" }, { "x", "ч" }, { "c", "с" }, { "v", "м" }, { "b", "и" }, { "n", "т" }, { "m", "ь" }, { ",", "б" },
-        };
-
         private void RegularKeyHandler(string key)
         {
-            if (Config.wordGroup == WordGroup.Russian) key = TranslatedKeys[key];
+            if (Config.wordGroup == WordGroup.Russian) key = Misc.TranslatedKeys[key];
             if (TestState.LetterIndex < getWord().Length)
             {
                 if (key == getLetter().Content)
