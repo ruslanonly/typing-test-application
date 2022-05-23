@@ -3,15 +3,12 @@ using System.IO;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Animation;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
-using System.Windows.Threading;
 
 namespace TypingTestApp
 {
@@ -298,10 +295,10 @@ namespace TypingTestApp
         private void BackSpaceHandler()
         {
             bool isWordBeginning = TestState.LetterIndex == 0;
-            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+
+            if (!isWordBeginning)
             {
-                if (!isWordBeginning)
-                {
+                if (Keyboard.IsKeyDown(Key.LeftCtrl)) {
                     if (TestState.LetterIndex == getWord().Length) --TestState.LetterIndex;
                     for (int i = TestState.LetterIndex; i >= 0; i--)
                     {
@@ -314,18 +311,30 @@ namespace TypingTestApp
                         letter.Default();
                     }
                     TestState.LetterIndex = 0;
-                    caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
-
-                }
-                else
+                } else
                 {
-                    TestState.WordIndex--;
-                    Word word = getWord();
-                    if (word.isCorrect)
+                    TestState.LetterIndex--;
+                    Letter letter = getLetter();
+                    if (letter.isCorrect)
                     {
-                        word.isCorrect = false;
-                        TestStats.CorrectWords--;
+                        letter.isCorrect = false;
+                        TestStats.CorrectLetters--;
                     }
+                    letter.Default();
+                }
+                caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
+            }
+            else
+            {
+                TestState.WordIndex--;
+                Word word = getWord();
+                if (word.isCorrect)
+                {
+                    word.isCorrect = false;
+                    TestStats.CorrectWords--;
+                }
+                if (Keyboard.IsKeyDown(Key.LeftCtrl))
+                {
                     for (int i = word.Length - 1; i >= 0; i--)
                     {
                         Letter letter = word.Children[i] as Letter;
@@ -338,31 +347,9 @@ namespace TypingTestApp
                     }
                     TestState.LetterIndex = 0;
                     caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
-                }
-            } else
-            {
-                if (!isWordBeginning)
+                } else
                 {
-                    TestState.LetterIndex--;
-                    Letter letter = getLetter();
-                    if (letter.isCorrect)
-                    {
-                        letter.isCorrect = false;
-                        TestStats.CorrectLetters--;
-                    }
-                    letter.Default();
-                    caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex));
-
-                }
-                else
-                {
-                    TestState.WordIndex--;
-                    Word word = getWord();
-                    if (word.isCorrect)
-                    {
-                        word.isCorrect = false;
-                        TestStats.CorrectWords--;
-                    }
+                        
                     TestState.LetterIndex = word.Length;
                     caret.MoveTo(getLetterPoint(TestState.WordIndex, TestState.LetterIndex - 1, true));
                 }

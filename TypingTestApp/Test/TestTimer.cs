@@ -1,8 +1,4 @@
-﻿using System;
-using System.Timers;
-using System.Windows;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Timers;
 
 namespace TypingTestApp
 {

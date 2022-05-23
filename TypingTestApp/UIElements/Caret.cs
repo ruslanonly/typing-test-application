@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Timers;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Threading;
-using System.Windows.Threading;
 
 namespace TypingTestApp
 {

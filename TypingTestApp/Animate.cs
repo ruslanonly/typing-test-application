@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media.Animation;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace TypingTestApp
 {
