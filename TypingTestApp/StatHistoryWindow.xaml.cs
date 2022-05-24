@@ -32,12 +32,12 @@ namespace TypingTestApp
             public SortingCriteria sortingCriteria;
             public void Active()
             {
-                Style = (Style)FindResource("ActiveSortingCriteriaButton");
+                Style = (Style)FindResource("ActiveSortingCriteriaButton"); // Application.FindResource
             }
 
             public void Default()
             {
-                Style = (Style)FindResource("SortingCriteriaButton");
+                Style = (Style)FindResource("SortingCriteriaButton"); // Application.FindResource
             }
 
             public SortingCriteriaButton(SortingCriteria sortingCriteria, SCBClickHandler clickHandler)

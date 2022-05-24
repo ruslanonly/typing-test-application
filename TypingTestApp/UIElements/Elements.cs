@@ -135,7 +135,7 @@ namespace TypingTestApp
 
     public class KeyBlock : TextBlock
     {
-        public string Character;
+        private string Character;
         private int _misClick = 0;
         public int IncorrectClicks
         {
@@ -202,7 +202,6 @@ namespace TypingTestApp
             for (int i = 0; i < 5; i++)
             {
                 ColumnDefinitions.Add(new ColumnDefinition());
-
             }
             RowDefinitions.Add(new RowDefinition());
             for (int i = 0; i < 5; i++)

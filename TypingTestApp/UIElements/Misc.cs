@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Threading.Tasks;
 using System.IO;
@@ -16,7 +15,6 @@ namespace TypingTestApp
             new string[] { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
             new string[] { "Z", "X", "C", "V", "B", "N", "M" },
         };
-
         static public Dictionary<string, string> TranslatedKeys = new Dictionary<string, string>
         {
             { "q", "й" }, { "w", "ц" }, { "e", "у" }, { "r", "к" }, { "t", "е" }, { "y", "н" }, { "u", "г" }, { "i", "ш" }, { "o", "щ" }, { "p", "з" },
